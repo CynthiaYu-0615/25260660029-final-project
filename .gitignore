@@ -218,3 +218,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# PYPL 插件运行时状态（控制器状态、hook 拦截日志），不入库；留证时手动复制到 evidence/
+.pypl/

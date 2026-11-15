@@ -247,3 +247,21 @@ rules.md：限制和规则，数字直接定下来——最大修订轮数 3、�
 
 写完把 check.py 的完整输出贴给我，再用 --live 真实跑一次 fetch_sec 把返回结果贴出来（as_of 用今天）。agent 其他部分和命令不要动。
 ~~~~
+
+## 第 15 条 · 2026-11-15 21:21:50
+~~~~
+接下来给插件加一个 PreToolUse hook，防止两件事：状态文件被控制器以外的人改，以及碰到交易相关的接口。参考官方文档，插件的 hooks 写在 kimi.plugin.json 里，hook 命令运行时工作目录是插件根目录，脚本通过 stdin 收到 JSON，退出码 2 表示拦截，stderr 是拦截原因，其他退出码默认放行。
+
+1. 新增 pypl/hooks/pre_tool_use.py，只用标准库。规则：
+   - Write、Edit 的目标路径落在任何 .pypl/ 目录下（路径字段名 path 或 file_path 都要兼容，要先 resolve 成绝对路径再判断，防止 .. 绕过）就拦截，提示「状态文件只能由控制器脚本写入」。
+   - Bash 命令里如果有往 .pypl/ 写、改、删文件的操作（重定向、tee、sed -i、rm、mv、cp 目标在 .pypl/ 之类），并且这条命令不是调用 plugins/managed/pypl/scripts/pypl.py 的，就拦截。
+   - Bash 和 FetchURL 里出现券商或下单相关的主机名（alpaca、robinhood、interactivebrokers、ibkr、schwab、tdameritrade、etrade、futunn、tigerbrokers 这些）或明显的下单请求特征（place order、submit order、/v2/orders 这类），就拦截，提示「本系统只做研究，不执行交易」。
+   - 其他一律放行，退出码 0。不要写太宽的规则，宁可漏拦也不要误伤正常的 git、测试、读文件命令。
+   - 每次拦截往运行时工作目录下的 .pypl/guard-log.jsonl 追加一行（时间、工具名、被拦的内容摘要、规则名），留作证据。日志目录不存在就创建。
+2. 在 pypl/kimi.plugin.json 里加 hooks：event 是 PreToolUse，matcher 是 ^(Write|Edit|Bash|FetchURL)$，command 是 python3 ./hooks/pre_tool_use.py，timeout 5。其他字段保持不变。
+3. 测试：新增 pypl/tests/test_hook.py，用 subprocess 把 JSON 喂给脚本，覆盖：Write 写 .pypl/state.json 被拦；用 .. 绕路的路径也被拦；Write 写普通文件放行；Bash 用 echo 重定向写 .pypl/ 被拦；Bash 调用控制器脚本放行；Bash 跑 git status 和 python3 pypl/scripts/check.py 放行；FetchURL 访问 alpaca 的下单接口被拦；FetchURL 访问 data.sec.gov 放行；脚本收到坏的 JSON 时放行并且不崩溃。把它加进 check.py 一起跑，全部通过再告诉我。
+4. 检查 .gitignore 里有没有 .pypl/ 和 __pycache__/，没有就加上。运行时产生的状态不要入库，需要作证据的我们之后手动复制到 evidence/。
+5. 在 design/ 下的设计笔记里（design/design.md，现在是占位，先写一小节就行）记一下：hook 是第二道防线，Kimi 的 hook 是 fail-open，不能当作唯一的安全屏障；第一道防线是 agent 的 tools 白名单和系统里没有任何交易工具。
+
+写完把 check.py 的完整输出贴给我。agent、命令、skill 这一步不要动。
+~~~~

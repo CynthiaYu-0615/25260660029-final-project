@@ -18,25 +18,30 @@ import tempfile
 import traceback
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-TESTS_PATH = os.path.join(SCRIPT_DIR, "..", "tests", "test_controller.py")
+TEST_FILES = ["test_controller.py", "test_hook.py"]
+
+
+def _load_module(name, path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def main():
-    spec = importlib.util.spec_from_file_location("test_controller", TESTS_PATH)
-    module = importlib.util.module_from_spec(spec)
-
     # 临时将 runtime 加入路径
     runtime_dir = os.path.join(SCRIPT_DIR, "..", "runtime")
     sys.path.insert(0, runtime_dir)
 
-    spec.loader.exec_module(module)
-
-    # 收集所有 test_ 函数
-    tests = [
-        (name, func)
-        for name, func in inspect.getmembers(module, inspect.isfunction)
-        if name.startswith("test_")
-    ]
+    tests = []
+    for fname in TEST_FILES:
+        path = os.path.join(SCRIPT_DIR, "..", "tests", fname)
+        module = _load_module(fname[:-3], path)
+        tests.extend(
+            (name, func)
+            for name, func in inspect.getmembers(module, inspect.isfunction)
+            if name.startswith("test_")
+        )
 
     passed = 0
     failed = 0

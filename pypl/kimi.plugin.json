@@ -5,6 +5,14 @@
   "commands": "./commands/",
   "skills": "./skills/",
   "agents": "./agents/",
+  "hooks": [
+    {
+      "event": "PreToolUse",
+      "matcher": "^(Write|Edit|Bash|FetchURL)$",
+      "command": "python3 ./hooks/pre_tool_use.py",
+      "timeout": 5
+    }
+  ],
   "sessionStart": {
     "skill": "start"
   }
