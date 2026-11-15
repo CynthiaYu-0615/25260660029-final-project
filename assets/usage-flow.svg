@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="1620" viewBox="0 0 1100 1620" font-family="PingFang SC, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="a2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L9,3 L0,6 Z" fill="#333"/>
+    </marker>
+  </defs>
+  <rect width="1100" height="1620" fill="#ffffff"/>
+  <text x="550" y="44" font-size="26" font-weight="bold" fill="#111" text-anchor="middle">PYPL 研究助手 · 使用流程</text>
+
+  <!-- 图例 -->
+  <rect x="120" y="64" width="860" height="46" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+  <rect x="140" y="78" width="20" height="14" rx="3" fill="#ffedd5" stroke="#c2410c"/>
+  <text x="168" y="90" font-size="14" fill="#111">我手动做的</text>
+  <rect x="290" y="78" width="20" height="14" rx="3" fill="#dbeafe" stroke="#1a56a0"/>
+  <text x="318" y="90" font-size="14" fill="#111">系统自动做的（LLM）</text>
+  <rect x="510" y="78" width="20" height="14" rx="3" fill="#dcfce7" stroke="#15803d"/>
+  <text x="538" y="90" font-size="14" fill="#111">系统自动做的（确定性代码）</text>
+  <rect x="790" y="78" width="20" height="14" rx="3" fill="#fee2e2" stroke="#b91c1c"/>
+  <text x="818" y="90" font-size="14" fill="#111">例外/终态</text>
+
+  <!-- 1 安装 -->
+  <rect x="230" y="130" width="640" height="76" rx="10" fill="#ffedd5" stroke="#c2410c" stroke-width="1.5"/>
+  <text x="550" y="158" font-size="17" font-weight="bold" text-anchor="middle" fill="#c2410c">① 安装插件并重新加载（我手动）</text>
+  <text x="550" y="184" font-size="14" text-anchor="middle" fill="#111">/plugins install &lt;仓库路径&gt;/pypl，然后 /reload（或 /new）使 hooks 生效</text>
+  <line x1="550" y1="206" x2="550" y2="238" stroke="#333" stroke-width="2" marker-end="url(#a2)"/>
+
+  <!-- 2 trade -->
+  <rect x="230" y="240" width="640" height="76" rx="10" fill="#ffedd5" stroke="#c2410c" stroke-width="1.5"/>
+  <text x="550" y="268" font-size="17" font-weight="bold" text-anchor="middle" fill="#c2410c">② /pypl:trade 登记持仓（我手动）</text>
+  <text x="550" y="294" font-size="14" text-anchor="middle" fill="#111">例：买/卖方向、数量、价格、日期；系统只登记，不执行真实交易</text>
+  <line x1="550" y1="316" x2="550" y2="336" stroke="#333" stroke-width="2"/>
+  <rect x="330" y="338" width="440" height="46" rx="8" fill="#dcfce7" stroke="#15803d"/>
+  <text x="550" y="366" font-size="14" text-anchor="middle" fill="#111">自动写入 .pypl/holdings.json（并触发一次研究）</text>
+  <line x1="550" y1="384" x2="550" y2="416" stroke="#333" stroke-width="2" marker-end="url(#a2)"/>
+
+  <!-- 3 event -->
+  <rect x="230" y="418" width="640" height="76" rx="10" fill="#ffedd5" stroke="#c2410c" stroke-width="1.5"/>
+  <text x="550" y="446" font-size="17" font-weight="bold" text-anchor="middle" fill="#c2410c">③ /pypl:event 登记财报日（我手动）</text>
+  <text x="550" y="472" font-size="14" text-anchor="middle" fill="#111">例：/pypl:event 2027-02-02（下一次财报官方日期取不到，由我登记）</text>
+  <line x1="550" y1="494" x2="550" y2="514" stroke="#333" stroke-width="2"/>
+  <rect x="330" y="516" width="440" height="66" rx="8" fill="#dcfce7" stroke="#15803d"/>
+  <text x="550" y="542" font-size="14" text-anchor="middle" fill="#111">自动登记两个事件（财报前两天、财报后）</text>
+  <text x="550" y="564" font-size="14" text-anchor="middle" fill="#111">并由 Orchestrator 调 CronCreate 建两个一次性提醒</text>
+  <line x1="550" y1="582" x2="550" y2="614" stroke="#333" stroke-width="2" marker-end="url(#a2)"/>
+  <text x="570" y="604" font-size="12" fill="#b91c1c">Cron 仅会话打开时触发</text>
+
+  <!-- 4 ping -->
+  <rect x="230" y="616" width="640" height="76" rx="10" fill="#ffedd5" stroke="#c2410c" stroke-width="1.5"/>
+  <text x="550" y="644" font-size="17" font-weight="bold" text-anchor="middle" fill="#c2410c">④ 每日 /pypl:ping（我手动或 Cron 自动）</text>
+  <text x="550" y="670" font-size="14" text-anchor="middle" fill="#111">检查今天是否事件日、搜 PYPL 新闻是否重大（裁员/收购/拆分/换 CXO）</text>
+  <line x1="550" y1="692" x2="550" y2="714" stroke="#333" stroke-width="2"/>
+  <polygon points="550,716 700,776 550,836 400,776" fill="#fef9c3" stroke="#a16207" stroke-width="2"/>
+  <text x="550" y="772" font-size="15" font-weight="bold" text-anchor="middle" fill="#a16207">事件日或重大新闻？</text>
+  <text x="550" y="794" font-size="13" text-anchor="middle" fill="#111">否则返回检查结果，结束当天</text>
+  <line x1="700" y1="776" x2="870" y2="776" stroke="#333" stroke-width="2" marker-end="url(#a2)"/>
+  <rect x="872" y="748" width="200" height="58" rx="8" fill="#f8fafc" stroke="#64748b"/>
+  <text x="972" y="772" font-size="13" text-anchor="middle" fill="#111">无触发：当天检查</text>
+  <text x="972" y="792" font-size="13" text-anchor="middle" fill="#111">结果返回，流程结束</text>
+
+  <!-- 5 start -->
+  <line x1="550" y1="836" x2="550" y2="872" stroke="#333" stroke-width="2" marker-end="url(#a2)"/>
+  <rect x="230" y="874" width="640" height="66" rx="10" fill="#ffedd5" stroke="#c2410c" stroke-width="1.5"/>
+  <text x="550" y="900" font-size="17" font-weight="bold" text-anchor="middle" fill="#c2410c">⑤ /pypl:start 手动触发（可选，随时可跑）</text>
+  <text x="550" y="924" font-size="14" text-anchor="middle" fill="#111">等不及事件也想看报告时直接手动生成</text>
+  <line x1="550" y1="940" x2="550" y2="972" stroke="#333" stroke-width="2" marker-end="url(#a2)"/>
+
+  <!-- 6 自动流水线 -->
+  <rect x="130" y="974" width="840" height="250" rx="12" fill="#eff6ff" stroke="#1a56a0" stroke-width="2"/>
+  <text x="550" y="1004" font-size="18" font-weight="bold" text-anchor="middle" fill="#1a56a0">⑥ 自动生成、核验、修订（系统自动）</text>
+  <rect x="170" y="1024" width="200" height="56" rx="8" fill="#dcfce7" stroke="#15803d"/>
+  <text x="270" y="1048" font-size="13" text-anchor="middle" fill="#111">fetch_sec 取财报数字</text>
+  <text x="270" y="1068" font-size="12" text-anchor="middle" fill="#555">(SEC XBRL，代码)</text>
+  <rect x="450" y="1024" width="200" height="56" rx="8" fill="#dbeafe" stroke="#1a56a0"/>
+  <text x="550" y="1048" font-size="13" text-anchor="middle" fill="#111">Generator 三个专项</text>
+  <text x="550" y="1068" font-size="12" text-anchor="middle" fill="#555">数据/基本面/估值</text>
+  <rect x="730" y="1024" width="200" height="56" rx="8" fill="#dcfce7" stroke="#15803d"/>
+  <text x="830" y="1048" font-size="13" text-anchor="middle" fill="#111">gate_report 关卡</text>
+  <text x="830" y="1068" font-size="12" text-anchor="middle" fill="#555">结构/违禁词/数值核对</text>
+  <rect x="310" y="1104" width="220" height="56" rx="8" fill="#dbeafe" stroke="#1a56a0"/>
+  <text x="420" y="1128" font-size="13" text-anchor="middle" fill="#111">Critic 三个专项核验</text>
+  <text x="420" y="1148" font-size="12" text-anchor="middle" fill="#555">证据/稳健性/风险</text>
+  <rect x="580" y="1104" width="200" height="56" rx="8" fill="#dcfce7" stroke="#15803d"/>
+  <text x="680" y="1128" font-size="13" text-anchor="middle" fill="#111">修订循环 ≤3 轮</text>
+  <text x="680" y="1148" font-size="12" text-anchor="middle" fill="#555">record_review 判定</text>
+  <rect x="170" y="1180" width="760" height="34" rx="8" fill="#fee2e2" stroke="#b91c1c"/>
+  <text x="550" y="1202" font-size="13" text-anchor="middle" fill="#b91c1c">超限或异常进入终态（exhausted/blocked/stalled 等），提示我人工介入</text>
+  <line x1="550" y1="1224" x2="550" y2="1256" stroke="#333" stroke-width="2" marker-end="url(#a2)"/>
+
+  <!-- 7 批准 -->
+  <rect x="230" y="1258" width="640" height="76" rx="10" fill="#ffedd5" stroke="#c2410c" stroke-width="2"/>
+  <text x="550" y="1286" font-size="17" font-weight="bold" text-anchor="middle" fill="#c2410c">⑦ 我批准归档（我手动）</text>
+  <text x="550" y="1312" font-size="14" text-anchor="middle" fill="#111">连续两轮核验通过后，AskUserQuestion 问我；record_approval 核对哈希</text>
+  <line x1="550" y1="1334" x2="550" y2="1366" stroke="#333" stroke-width="2" marker-end="url(#a2)"/>
+
+  <!-- 8 产出 -->
+  <rect x="230" y="1368" width="640" height="108" rx="10" fill="#dcfce7" stroke="#15803d" stroke-width="2"/>
+  <text x="550" y="1398" font-size="17" font-weight="bold" text-anchor="middle" fill="#15803d">⑧ 报告与证据落盘（自动）</text>
+  <text x="550" y="1426" font-size="14" text-anchor="middle" fill="#111">.pypl/reports/ 最终报告（结论：增持/减持/持有不动 + 理由 + 持仓含义）</text>
+  <text x="550" y="1450" font-size="14" text-anchor="middle" fill="#111">.pypl/state.json · evidence/ · approvals.json · holdings.json 全程留痕</text>
+  <text x="550" y="1480" font-size="13" text-anchor="middle" fill="#15803d">系统只做研究，不执行任何买卖；交易由我自己在券商完成并登记</text>
+
+  <text x="550" y="1570" font-size="13" fill="#334155" text-anchor="middle">注：④ 也可由每日循环 Cron 触发，但循环任务 7 天过期需重新登记；Datasource 插件需 /login。</text>
+</svg>

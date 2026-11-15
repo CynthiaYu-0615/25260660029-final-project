@@ -1,0 +1,195 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1900" height="1340" viewBox="0 0 1900 1340" font-family="PingFang SC, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L9,3 L0,6 Z" fill="#333"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L9,3 L0,6 Z" fill="#1a56a0"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L9,3 L0,6 Z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect width="1900" height="1340" fill="#ffffff"/>
+  <text x="30" y="42" font-size="26" font-weight="bold" fill="#111">PYPL 持续研究 · 系统工作流（节点名与 skills/start/SKILL.md 步骤一致）</text>
+
+  <!-- 图例 -->
+  <rect x="1450" y="18" width="420" height="64" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+  <rect x="1466" y="34" width="20" height="14" rx="3" fill="#dbeafe" stroke="#1a56a0"/>
+  <text x="1492" y="46" font-size="14" fill="#111">agent（LLM）</text>
+  <rect x="1606" y="34" width="20" height="14" rx="3" fill="#dcfce7" stroke="#15803d"/>
+  <text x="1632" y="46" font-size="14" fill="#111">确定性代码</text>
+  <rect x="1746" y="34" width="20" height="14" rx="3" fill="#ffedd5" stroke="#c2410c"/>
+  <text x="1772" y="46" font-size="14" fill="#111">人工</text>
+  <rect x="1466" y="58" width="20" height="14" rx="3" fill="#fee2e2" stroke="#b91c1c"/>
+  <text x="1492" y="70" font-size="14" fill="#111">终态出口</text>
+  <line x1="1606" y1="65" x2="1646" y2="65" stroke="#b91c1c" stroke-dasharray="6 4" stroke-width="2"/>
+  <text x="1652" y="70" font-size="14" fill="#111">重试 / 循环回路</text>
+
+  <!-- 左列：用户命令与触发 -->
+  <rect x="30" y="100" width="290" height="560" rx="10" fill="#fff7ed" stroke="#c2410c" stroke-width="1.5"/>
+  <text x="175" y="130" font-size="18" font-weight="bold" fill="#c2410c" text-anchor="middle">用户命令与触发</text>
+  <rect x="52" y="152" width="246" height="52" rx="8" fill="#ffedd5" stroke="#c2410c"/>
+  <text x="175" y="174" font-size="15" text-anchor="middle" fill="#111">/pypl:start（manual 触发）</text>
+  <text x="175" y="193" font-size="12" text-anchor="middle" fill="#555">手动立即生成报告</text>
+  <rect x="52" y="218" width="246" height="52" rx="8" fill="#ffedd5" stroke="#c2410c"/>
+  <text x="175" y="240" font-size="15" text-anchor="middle" fill="#111">/pypl:trade（trade 触发）</text>
+  <text x="175" y="259" font-size="12" text-anchor="middle" fill="#555">登记持仓 → holdings.json</text>
+  <rect x="52" y="284" width="246" height="70" rx="8" fill="#ffedd5" stroke="#c2410c"/>
+  <text x="175" y="306" font-size="15" text-anchor="middle" fill="#111">/pypl:event + Cron 提醒</text>
+  <text x="175" y="325" font-size="12" text-anchor="middle" fill="#555">登记财报日 → events.json 两事件</text>
+  <text x="175" y="342" font-size="12" text-anchor="middle" fill="#555">CronCreate 两个一次性提醒</text>
+  <rect x="52" y="368" width="246" height="70" rx="8" fill="#ffedd5" stroke="#c2410c"/>
+  <text x="175" y="390" font-size="15" text-anchor="middle" fill="#111">/pypl:ping（news 触发）</text>
+  <text x="175" y="409" font-size="12" text-anchor="middle" fill="#555">每日检查事件日/重大新闻</text>
+  <text x="175" y="426" font-size="12" text-anchor="middle" fill="#555">首次可注册每日循环 Cron</text>
+  <rect x="52" y="452" width="246" height="52" rx="8" fill="#ffedd5" stroke="#c2410c"/>
+  <text x="175" y="474" font-size="15" text-anchor="middle" fill="#111">/pypl:evo（系统演进）</text>
+  <text x="175" y="493" font-size="12" text-anchor="middle" fill="#555">规则 A/B，不生成报告</text>
+  <text x="52" y="532" font-size="12" fill="#b91c1c">Cron 局限：仅会话打开时触发；</text>
+  <text x="52" y="550" font-size="12" fill="#b91c1c">循环任务 7 天过期，需重新登记。</text>
+  <text x="52" y="586" font-size="13" font-weight="bold" fill="#c2410c">五种报告触发</text>
+  <text x="52" y="608" font-size="13" fill="#111">earnings_pre · earnings_post</text>
+  <text x="52" y="628" font-size="13" fill="#111">news · trade · manual</text>
+
+  <!-- Orchestrator 主流程 -->
+  <rect x="380" y="100" width="520" height="420" rx="12" fill="#eff6ff" stroke="#1a56a0" stroke-width="2"/>
+  <text x="640" y="130" font-size="20" font-weight="bold" fill="#1a56a0" text-anchor="middle">Orchestrator（主 agent，LLM）</text>
+  <text x="640" y="152" font-size="13" fill="#555" text-anchor="middle">pypl/skills/start/SKILL.md（sessionStart 注入）</text>
+
+  <rect x="470" y="172" width="340" height="44" rx="8" fill="#ffffff" stroke="#1a56a0"/>
+  <text x="640" y="199" font-size="15" text-anchor="middle" fill="#111">1 新建请求 new_request</text>
+
+  <rect x="470" y="232" width="340" height="44" rx="8" fill="#ffffff" stroke="#1a56a0"/>
+  <text x="640" y="259" font-size="15" text-anchor="middle" fill="#111">2 取财报数字 fetch_sec</text>
+
+  <rect x="470" y="292" width="340" height="56" rx="8" fill="#ffffff" stroke="#1a56a0"/>
+  <text x="640" y="315" font-size="15" text-anchor="middle" fill="#111">3 准备输入</text>
+  <text x="640" y="334" font-size="12" text-anchor="middle" fill="#555">任务包 + 持仓 + sec_facts</text>
+
+  <rect x="470" y="364" width="340" height="56" rx="8" fill="#ffffff" stroke="#1a56a0"/>
+  <text x="640" y="387" font-size="15" text-anchor="middle" fill="#111">4 报告生成：派 generator</text>
+  <text x="640" y="406" font-size="12" text-anchor="middle" fill="#555">必须真实调用三个专项</text>
+
+  <rect x="470" y="436" width="340" height="66" rx="8" fill="#ffffff" stroke="#1a56a0"/>
+  <text x="640" y="460" font-size="15" text-anchor="middle" fill="#111">6 调用 Critic（三个专项）</text>
+  <text x="640" y="479" font-size="12" text-anchor="middle" fill="#555">7 record_review → next_action</text>
+  <text x="640" y="495" font-size="12" text-anchor="middle" fill="#555">严格按控制器返回值走</text>
+
+  <!-- 控制器 -->
+  <rect x="380" y="560" width="520" height="240" rx="12" fill="#f0fdf4" stroke="#15803d" stroke-width="2"/>
+  <text x="640" y="590" font-size="20" font-weight="bold" fill="#15803d" text-anchor="middle">控制器（确定性代码）</text>
+  <text x="640" y="612" font-size="13" fill="#555" text-anchor="middle">pypl/scripts/pypl.py + pypl/runtime/pypl/*.py</text>
+  <text x="640" y="640" font-size="14" text-anchor="middle" fill="#111">fetch_sec · persist_artifact · verify_hash</text>
+  <text x="640" y="666" font-size="14" text-anchor="middle" fill="#111">gate_report · record_review · record_approval</text>
+  <text x="640" y="692" font-size="14" text-anchor="middle" fill="#111">check_limits · write_final_state · recover</text>
+  <text x="640" y="724" font-size="13" text-anchor="middle" fill="#15803d">唯一可写 .pypl/ 的角色；agent 只返回文本/JSON</text>
+  <text x="640" y="752" font-size="13" text-anchor="middle" fill="#b91c1c">check_limits：60 次工具调用 / 20 分钟</text>
+  <text x="640" y="778" font-size="13" text-anchor="middle" fill="#b91c1c">recover：只执行未完成步骤</text>
+
+  <!-- Generator 侧 -->
+  <rect x="1000" y="100" width="420" height="300" rx="12" fill="#eff6ff" stroke="#1a56a0" stroke-width="2"/>
+  <text x="1210" y="130" font-size="19" font-weight="bold" fill="#1a56a0" text-anchor="middle">Generator 侧（LLM）</text>
+  <circle cx="1120" cy="200" r="56" fill="#dbeafe" stroke="#1a56a0" stroke-width="1.5"/>
+  <text x="1120" y="196" font-size="14" text-anchor="middle" fill="#111">gen-data</text>
+  <text x="1120" y="214" font-size="11" text-anchor="middle" fill="#555">股价/新闻/8-K</text>
+  <circle cx="1300" cy="200" r="56" fill="#dbeafe" stroke="#1a56a0" stroke-width="1.5"/>
+  <text x="1300" y="196" font-size="14" text-anchor="middle" fill="#111">gen-fundamentals</text>
+  <text x="1300" y="214" font-size="11" text-anchor="middle" fill="#555">财务指标</text>
+  <circle cx="1210" cy="320" r="56" fill="#dbeafe" stroke="#1a56a0" stroke-width="1.5"/>
+  <text x="1210" y="316" font-size="14" text-anchor="middle" fill="#111">gen-valuation</text>
+  <text x="1210" y="334" font-size="11" text-anchor="middle" fill="#555">估值与情景</text>
+  <text x="1210" y="388" font-size="13" text-anchor="middle" fill="#111">候选报告 + 证据文本（key_figures 抄录 sec_facts）</text>
+
+  <!-- Critic 侧 -->
+  <rect x="1000" y="440" width="420" height="300" rx="12" fill="#eff6ff" stroke="#1a56a0" stroke-width="2"/>
+  <text x="1210" y="470" font-size="19" font-weight="bold" fill="#1a56a0" text-anchor="middle">Critic 侧（LLM，与生成方工具不同）</text>
+  <circle cx="1120" cy="540" r="56" fill="#dbeafe" stroke="#1a56a0" stroke-width="1.5"/>
+  <text x="1120" y="536" font-size="13" text-anchor="middle" fill="#111">critic-evidence</text>
+  <text x="1120" y="554" font-size="11" text-anchor="middle" fill="#555">核对来源/as-of</text>
+  <circle cx="1300" cy="540" r="56" fill="#dbeafe" stroke="#1a56a0" stroke-width="1.5"/>
+  <text x="1300" y="536" font-size="13" text-anchor="middle" fill="#111">critic-robustness</text>
+  <text x="1300" y="554" font-size="11" text-anchor="middle" fill="#555">稳健性</text>
+  <circle cx="1210" cy="660" r="56" fill="#dbeafe" stroke="#1a56a0" stroke-width="1.5"/>
+  <text x="1210" y="656" font-size="13" text-anchor="middle" fill="#111">critic-risk</text>
+  <text x="1210" y="674" font-size="11" text-anchor="middle" fill="#555">交易指令/结论/风险</text>
+  <text x="1210" y="722" font-size="13" text-anchor="middle" fill="#111">问题项列表（critic 负责人合并 + 覆盖检查）</text>
+
+  <!-- Gate 关卡 -->
+  <polygon points="640,860 800,920 640,980 480,920" fill="#dcfce7" stroke="#15803d" stroke-width="2"/>
+  <text x="640" y="912" font-size="16" font-weight="bold" text-anchor="middle" fill="#15803d">5 Gate 检查</text>
+  <text x="640" y="934" font-size="13" text-anchor="middle" fill="#111">gate_report</text>
+  <text x="640" y="952" font-size="12" text-anchor="middle" fill="#555">gate_rules.json v0.2</text>
+
+  <!-- 判断菱形 next_action -->
+  <polygon points="1210,860 1370,935 1210,1010 1050,935" fill="#fef9c3" stroke="#a16207" stroke-width="2"/>
+  <text x="1210" y="928" font-size="15" font-weight="bold" text-anchor="middle" fill="#a16207">next_action</text>
+  <text x="1210" y="950" font-size="12" text-anchor="middle" fill="#111">record_review 判定</text>
+
+  <!-- 人工批准 -->
+  <rect x="1520" y="890" width="330" height="90" rx="10" fill="#ffedd5" stroke="#c2410c" stroke-width="2"/>
+  <text x="1685" y="922" font-size="17" font-weight="bold" text-anchor="middle" fill="#c2410c">人工批准关卡</text>
+  <text x="1685" y="946" font-size="13" text-anchor="middle" fill="#111">AskUserQuestion → record_approval</text>
+  <text x="1685" y="966" font-size="12" text-anchor="middle" fill="#555">核对候选 sha256；approve→accepted</text>
+
+  <!-- 终态出口 -->
+  <rect x="1520" y="1020" width="330" height="120" rx="10" fill="#fee2e2" stroke="#b91c1c" stroke-width="2"/>
+  <text x="1685" y="1048" font-size="16" font-weight="bold" text-anchor="middle" fill="#b91c1c">终态出口（六种）</text>
+  <text x="1685" y="1072" font-size="13" text-anchor="middle" fill="#111">accepted · rejected · blocked</text>
+  <text x="1685" y="1094" font-size="13" text-anchor="middle" fill="#111">exhausted（≠通过）· stalled</text>
+  <text x="1685" y="1116" font-size="13" text-anchor="middle" fill="#111">user_stopped</text>
+  <text x="1685" y="1132" font-size="11" text-anchor="middle" fill="#b91c1c">终态写入后不可覆盖</text>
+
+  <!-- 共享状态 -->
+  <rect x="380" y="1060" width="1040" height="180" rx="12" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
+  <text x="900" y="1092" font-size="18" font-weight="bold" fill="#334155" text-anchor="middle">共享状态与证据（.pypl/，仅控制器可写）</text>
+  <text x="900" y="1122" font-size="14" text-anchor="middle" fill="#111">state.json（phase/round/issues/consecutive_passes/final_state）· holdings.json · events.json · approvals.json</text>
+  <text x="900" y="1150" font-size="14" text-anchor="middle" fill="#111">reports/ + evidence/：产物路径 + sha256（artifacts.py 计算）</text>
+  <text x="900" y="1182" font-size="13" text-anchor="middle" fill="#555">检查点：① sec_facts 落盘　② 候选报告+证据包落盘并核对哈希　③ record_review 更新轮次　④ write_final_state</text>
+  <text x="900" y="1210" font-size="13" text-anchor="middle" fill="#555">恢复入口：recover（不重复已完成步骤）→ 证据见 evidence/recovery/</text>
+
+  <!-- 箭头：触发 → Orchestrator -->
+  <line x1="320" y1="240" x2="470" y2="200" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="355" y="212" font-size="12" fill="#333">触发</text>
+
+  <!-- Orchestrator 内部步骤箭头 -->
+  <line x1="640" y1="216" x2="640" y2="230" stroke="#1a56a0" stroke-width="2" marker-end="url(#arrowBlue)"/>
+  <line x1="640" y1="276" x2="640" y2="290" stroke="#1a56a0" stroke-width="2" marker-end="url(#arrowBlue)"/>
+  <line x1="640" y1="348" x2="640" y2="362" stroke="#1a56a0" stroke-width="2" marker-end="url(#arrowBlue)"/>
+  <!-- 4 → Generator -->
+  <line x1="810" y1="392" x2="1000" y2="260" stroke="#1a56a0" stroke-width="2" marker-end="url(#arrowBlue)"/>
+  <text x="880" y="316" font-size="12" fill="#1a56a0">任务包</text>
+  <!-- Generator → 落盘（绕开 Critic 框） -->
+  <line x1="1020" y1="400" x2="900" y2="558" stroke="#1a56a0" stroke-width="2" marker-end="url(#arrowBlue)"/>
+  <text x="903" y="428" font-size="12" fill="#1a56a0">5 落盘核对哈希</text>
+  <!-- 落盘 → Gate -->
+  <line x1="640" y1="800" x2="640" y2="858" stroke="#15803d" stroke-width="2" marker-end="url(#arrow)"/>
+  <!-- Gate → Critic（绕开控制器框） -->
+  <polyline points="800,920 940,920 940,660 998,660" fill="none" stroke="#15803d" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="820" y="905" font-size="12" fill="#15803d">通过才送审</text>
+  <!-- Critic → next_action -->
+  <line x1="1210" y1="740" x2="1210" y2="858" stroke="#1a56a0" stroke-width="2" marker-end="url(#arrowBlue)"/>
+  <!-- next_action → 人工批准 -->
+  <line x1="1370" y1="935" x2="1520" y2="935" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="1400" y="922" font-size="12" fill="#333">await_approval</text>
+  <!-- 人工批准 → 终态 -->
+  <line x1="1685" y1="980" x2="1685" y2="1018" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <!-- next_action → 终态（exhausted 等） -->
+  <line x1="1370" y1="958" x2="1520" y2="1060" stroke="#b91c1c" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrowRed)"/>
+  <text x="1398" y="1012" font-size="12" fill="#b91c1c">final（exhausted 等）</text>
+  <!-- revise 回路（绕开 Gate，沿 Orchestrator 右边距上行） -->
+  <path d="M 1050 900 C 880,860 850,820 848,700 L 845,424" fill="none" stroke="#b91c1c" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrowRed)"/>
+  <text x="856" y="600" font-size="12" fill="#b91c1c">revise：修复任务包</text>
+  <text x="856" y="618" font-size="12" fill="#b91c1c">修订循环 ≤3 轮</text>
+  <!-- review_again 回路 -->
+  <path d="M 1210 1010 C 1210 1060, 1460 1040, 1460 740 L 1422 740" fill="none" stroke="#b91c1c" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrowRed)"/>
+  <text x="1452" y="880" font-size="12" fill="#b91c1c">review_again</text>
+  <!-- 状态写入虚线 -->
+  <line x1="520" y1="800" x2="520" y2="1058" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrow)"/>
+  <line x1="900" y1="980" x2="900" y2="1058" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrow)"/>
+  <line x1="1210" y1="1010" x2="1210" y2="1058" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrow)"/>
+
+  <!-- 注释 -->
+  <text x="30" y="1290" font-size="14" fill="#334155">注：fetch_sec 按 filed ≤ as_of 在代码内过滤（防未来信息泄露）；gate_report 与 sec_facts 做 0.5% 容差数值交叉核对；Hook（PreToolUse）兜底拦截 .pypl/ 直写与交易接口（fail-open，第二道防线）。</text>
+</svg>

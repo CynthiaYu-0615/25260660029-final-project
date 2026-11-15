@@ -307,3 +307,30 @@ evidence/README.md：每个子目录是什么证据、一条命令怎么复现�
 
 做完把 check.py 的输出、evals/ab-001.md、evals/ab-002.md、CHANGELOG.md 的内容贴给我。别的文件不要动。
 ~~~~
+
+## 第 18 条 · 2026-11-15 22:20:54
+~~~~
+接下来补齐作业要求的文档部分：设计说明、带注释的工作流图、README。所有内容要和仓库里真实存在的文件一致，每个说法都指向具体的文件或证据路径，没做过的不要写成做过。
+
+一、design/design.md（保留现有的 hook 小节，把它放进下面的结构里），按作业要求的顺序分节：
+1. 角色与交接：九个角色（Orchestrator 主 agent、两个负责人、六个专项）一张表——职责、工具、输入输出、对应的 agents/ 或 skills/ 文件、为什么这样分工；再写与老师「完整架构」图的对应关系。
+2. 确定性代码 vs LLM 的边界：一张表，逐步骤标注「代码」或「LLM」并给一句理由（取 SEC 数字、as-of 过滤、哈希、关卡检查、状态落盘、限制检查、轮数判断、批准记录是代码；新闻判断、报告撰写、证据核对和稳健性判断是 LLM）。
+3. 智能体决策与控制器执行控制：双栏对照表，说明 agent 只产出判断或草稿，调度、重试、停止、预算、权限、状态写入、恢复入口都在控制器（record_review 的 next_action、check_limits、persist_artifact 等），指向代码位置。
+4. 长程运行：持久化状态与检查点（state.json 的字段和落盘时机）、阶段依赖、触发机制（五种触发；Cron 只在会话打开时有效、循环任务 7 天过期的局限如实写）、重试策略、停止与升级规则（六种终态，exhausted 不等于通过）、中断恢复（recover，不重复已完成步骤，指向 evidence/recovery/）、时间成本与工具权限上限（3 轮、重试 2 次、60 次工具调用、20 分钟，各 agent 的 tools 白名单）。
+5. 核验与改进：独立核验（Critic 上下文隔离、工具与生成方不同、gate_report 是确定性核验，指向 evidence/verification/）；人工批准（record_approval，指向 evidence/approval/）；有界修订循环（最多 3 轮，超限升级，指向 evidence/verification/exhausted/）；固定基线 A/B 与版本回滚（evals/、CHANGELOG.md、git tag v0.1-baseline 和 v0.2，指向 evals/ab-001.md、ab-002.md、rollback-demo.md）；未来信息泄露防护（as-of 作为一等参数，fetch_sec 在代码里按 filed 日期过滤，gate_report 与 critic-risk 检查，指向对应测试和 evidence，这个任务是时序敏感的，不能写成不适用）。
+6. 证据状态与局限：哪些证据来自演示脚本（假 agent 驱动真实控制器和真实 hook），哪些来自真实 LLM 端到端运行（evidence/live/ 如果现在还没有就明确写「尚未包含」，后面补）；evo 目前只评估关卡规则，提示词改动的完整 LLM 对比是未来工作；Cron 和 hook 的局限；数据源局限（下一次财报日期官方取不到，靠用户登记）。
+
+二、两张图，所有图（源文件和 PNG）都放在 assets/ 里，不要放在别的目录：
+1. 系统工作流图（带注释）：手写 SVG 存 assets/workflow.svg，用 rsvg-convert 导出 assets/workflow.png（宽度不小于 1800 像素）。要表达：用户命令入口和五种触发；Orchestrator、Generator 侧（三个专项）、Critic 侧（三个专项）、控制器（代码）；用颜色或形状区分 agent、确定性代码、人工，并放图例；标出检查点（哪些步骤落盘）、gate_report 关卡、重试回路、修订循环（最多 3 轮）、停止与升级出口（六种终态）、人工批准关卡、共享状态与证据。节点名要和 skills/start/SKILL.md 里的步骤名一致。design/workflow.md 里引用这张图并写 4 到 6 条文字注释。
+2. 用户使用流程图：assets/usage-flow.svg 和 assets/usage-flow.png，面向使用者，画从安装插件开始到拿到报告的流程：安装与 /reload → /pypl:trade 登记持仓 → /pypl:event 登记财报日（自动登记财报前两天和财报后两个提醒）→ 每日 /pypl:ping（事件日或重大新闻则触发）→ /pypl:start 手动触发 → 自动生成、核验、修订 → 我批准归档 → 报告和证据落在 .pypl/ 。标出哪些是我手动做的、哪些是系统自动做的。
+两张图导出后都用 ReadMediaFile 看一眼 PNG，文字不重叠、能读清再提交，不行就改一轮。
+
+三、README.md 重写，必须包含作业要求的七项：1 个人信息（姓名于欣荷、学号 25260660029、课程《金融人工智能编程》2026 年秋季）；2 任务概述；3 代码仓库链接（用 git remote 里的仓库地址，去掉其中任何认证信息，只写 https://github.com/<用户>/<仓库>；并说明审阅 ZIP 不需要访问远程）；4 文件说明（目录树加一句话说明）；5 环境配置与运行说明（要包含一节「插件使用说明」：每个命令 /pypl:start、/pypl:trade、/pypl:event、/pypl:ping、/pypl:evo 的作用、参数格式、一个例子、做完后能在哪里看到结果（.pypl/ 下的哪些文件），以及一条从安装到拿到第一份报告的完整操作示例；另有一节「工作流程」，用 ![系统工作流](assets/workflow.png) 和 ![使用流程](assets/usage-flow.png) 插入两张图并各配 2 到 3 句说明；Kimi Code 版本、/plugins install 本地路径的安装方法、需要 /reload 或 /new、Datasource 插件需要 /login、命令用法；不依赖 LLM 就能复现的演示：python3 pypl/scripts/check.py 和 python3 pypl/scripts/demo.py --all；evo：python3 pypl/scripts/evo.py ...；5 分钟内能跑通的最短路径）；6 依赖项（Python 版本、只用标准库、Kimi Code、Kimi Datasource 插件、git）；7 本人贡献。以第一人称写，分两层，不要弱化我的作用：
+   第一层，我自己做的事：确定项目目标（对持有的 PYPL 做持续研究，系统只做研究不执行买卖，买卖由我登记）；确定实现方式（做成 Kimi Code 插件，对照课上的完整架构设计 Orchestrator、Generator、Critic 三个角色）；做 high level 设计（九个角色的划分、五种触发条件、报告必须给出增持/减持/持有不动的明确结论、可判定的验收标准、数据来源和 as-of 规则）；做 harness 设计（状态和检查点、由控制器代码而不是 agent 来决定下一步、送审前的确定性关卡、哈希核对、限制与终态、中断恢复、人工批准、固定基线的 A/B 与回滚、防未来信息泄露）；以及每一步的取舍和验收（审阅每步产出、发现问题就要求修正，亲自批准 evo 的采纳）。
+   第二层，我使用 AI 辅助开发：使用 Kimi Code 作为开发助手，我把设计拆成一步一步的指令交给它去实现，并逐步审核结果；每一条指令的原文都记录在 CONTEXT.md，可以回看我是怎么指挥的。AI 辅助开发的使用本身也是我对这个项目的工作方式的设计和贡献。
+   不要提其他工具或模型的名字，只写 Kimi Code。最后加一节「已知局限」，内容和 design.md 第 6 节一致。
+
+四、清理：evidence/ 根目录那三个 3 行占位文件（recovery.md、runs.md、verification.md）删掉，evidence/README.md 已经是索引；检查 design/task.md 里和现在实现不一致的地方并改正（例如命令名、触发条件、数据来源、验收标准）。
+
+写完不用贴 README 全文，只告诉我：两张 PNG 的路径和尺寸、你检查后的结论、改了哪些文件。我自己去看。
+~~~~

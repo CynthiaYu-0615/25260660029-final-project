@@ -24,7 +24,7 @@
 ```
 
 1. **输入登记**：`/pypl:trade` 写入持仓；`/pypl:event` 写入财报日期并注册一次性 Cron 提醒。
-2. **触发判断**：`/pypl:ping` 检查事件日和重大新闻；`/pypl:start` 由用户手动触发；`/pypl:evo` 由用户手动触发以进行系统演进。首次运行 `/pypl:ping` 时会注册每日循环 Cron 任务。
+2. **触发判断**：`/pypl:ping` 检查事件日和重大新闻；`/pypl:start` 由用户手动触发；首次运行 `/pypl:ping` 时可注册每日循环 Cron 任务。`/pypl:evo` 是系统演进命令，走 `evals/` 固定基线流程，不进入报告流水线。
 3. **数据准备**：读取 `.pypl/holdings.json` 中的持仓，查询允许的公开资料，并标注信息截止时点。
 4. **报告生成**：Generator 及三个专项生成候选报告。
 5. **Critic 验证**：Critic 及三个专项独立评估，返回问题项。
@@ -35,16 +35,19 @@
 
 1. **财报前两天**：用户登记财报日后，系统用 `CronCreate` 注册一次性提醒，在财报前两天触发 `ping` 流程。
 2. **财报发布后**：用户登记财报日后，系统用 `CronCreate` 注册一次性提醒，在财报发布当天/后触发 `ping` 流程。
-3. **每日检查发现重大新闻**：首次 `/pypl:ping` 时用 `CronCreate` 注册每日循环任务；`ping` 搜索 PYPL 新闻，发现裁员、收购、并购、拆分、换 CXO 等级别事件时触发。
+3. **每日检查发现重大新闻**：首次 `/pypl:ping` 时可用 `CronCreate` 注册每日循环任务；`ping` 搜索 PYPL 新闻，发现裁员、收购、并购、拆分、换 CXO 等级别事件时触发。
 4. **登记持仓变化**：用户执行 `/pypl:trade` 后立即触发一次报告生成。
-5. **用户触发系统演进**：用户执行 `/pypl:evo`，在固定基线样例上比较提示词或规则改动前后的效果，以决定是否采纳、回滚或继续迭代；该命令不直接触发生产报告，只用于改进系统本身。
+5. **用户手动触发**：用户执行 `/pypl:start`，立即生成一份报告。
+
+另：`/pypl:evo` 是系统演进命令（改进关卡规则用，见 `evals/` 与 `pypl/scripts/evo.py`），不属于报告触发，不生成报告。
 
 ## 6. 允许使用的资料来源与信息截止时点规则
 
-- **允许来源**：详见 `pypl/references/data-sources.md`。当前实测可用的来源包括：
-  - SEC EDGAR（`https://data.sec.gov/submissions/CIK0001633917.json`、10-Q/10-K/8-K 文件）。
-  - 财经新闻页面（如 `stockanalysis.com/stocks/pypl` 新闻区）。
-  - `kimi-datasource` 插件数据源（`sec_edgar`、`stock_finance_data`、`yahoo_finance`、`xhcj`、`cls` 等），插件安装并重新加载会话后可用。
+- **允许来源**：详见 `pypl/references/data-sources.md`（2026-11-15 实测）。要点：
+  - 财报核心数字（收入、净利润、稀释 EPS）：首选控制器确定性子命令 `fetch_sec`（`pypl/runtime/pypl/fetch.py`，访问 SEC XBRL 接口），不经 agent、不用 Bash。
+  - 行情与新闻：`kimi-datasource` 插件已实测的数据源 `yahoo_finance`、`sec_edgar`、`dongcai`、`xhcj`（`cls`、`stock_finance_data` 已验证存在未实测取数）；失败时降级 `FetchURL` 公开页面。
+  - 8-K 条目：`sec_edgar` 的 `sec_edgar_get_filings` + `sec_edgar_get_company_events`。
+  - 下一次财报日期无官方来源可取（SEC 只有历史申报，yahoo_finance/dongcai 实测均不给未来日期），由用户 `/pypl:event` 登记。
 - **禁止来源**：内幕消息、非公开的付费研报、需要登录或付费才能访问的私有数据源。
 - **as-of 规则**：每条数据必须记录获取时间戳和信息来源 URL；报告封面必须写明“信息截止至”这一时间点；禁止使用标注时间之后的信息论证该时间点之前的结论；若使用 `examples/input/` 中录制样例，必须明确标注「使用录制数据」及录制时间。
 - **定时任务规则**：系统使用 Kimi Code 的 `CronCreate` / `CronList` / `CronDelete` 注册提醒。Cron 任务仅在当前会话保持打开时触发；会话关闭后不会触发。循环任务 7 天后自动过期，需要重新登记。演示时也可手动运行 `/pypl:ping`。
@@ -57,7 +60,7 @@
 2. **理由充分**：至少列出三条支持该结论的理由，并标注数据来源和 as-of。
 3. **持仓含义**：明确说明该结论对当前 `.pypl/holdings.json` 中持仓的含义。
 4. **风险提示**：包含一条以上风险因素。
-5. **无交易指令**：正文中不能出现“买入 / 卖出 / 下单”等执行性交易指令，只能出现研究观点。
+5. **无交易指令**：正文中不能出现执行性交易指令词（违禁词列表见 `pypl/references/gate_rules.json`，当前 v0.2：买入/卖出/下单/加仓/清仓/抄底），只能出现研究观点。
 6. **Critic 验证通过**：同一候选报告连续两轮被 Critic 三个专项全部通过，且没有未解决问题项，才算 `ACCEPTED`；候选报告一旦改动，连续通过轮次从头计算。
 7. **格式正确**：包含标题、信息截止时点、结论、理由、持仓含义、风险提示六个部分。
 
