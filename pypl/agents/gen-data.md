@@ -25,7 +25,7 @@ gen-data 专项。你的任务是为 PYPL 研究收集公开数据，只使用 `
 2. 使用 WebSearch、FetchURL 或 `mcp__kimi-datasource__*` 从允许来源获取数据。
 3. 对每个数据点记录：数值、来源 URL、获取时间、as-of 关系。
 4. 过滤掉时间戳晚于 as-of 的数据。
-5. 将数据整理成结构化 JSON 文件。
+5. 将数据整理成结构化 JSON 文本返回。
 
 ## 输出格式
 
@@ -36,25 +36,12 @@ gen-data 专项。你的任务是为 PYPL 研究收集公开数据，只使用 `
   "request_id": "req-20261115-001",
   "agent": "gen-data",
   "status": "ok|info_insufficient|error",
-  "data_points": [
-    {
-      "metric": "收盘价",
-      "value": 65.50,
-      "currency": "USD",
-      "source_url": "https://finance.yahoo.com/quote/PYPL/history/...",
-      "retrieved_at": "2026-11-15T09:00:00+08:00",
-      "as_of": "2026-11-14T16:00:00-05:00"
-    }
-  ],
-  "artifact": {
-    "path": ".pypl/evidence/data-001.json",
-    "sha256": "..."
-  },
+  "data_content": "{... 结构化的数据内容，每条带 source_url 和 as_of}",
   "notes": "信息不足时的说明"
 }
 ```
 
-- `status` 为 `info_insufficient` 时，`data_points` 可以为空，`notes` 说明缺失了哪些数据。
+- `status` 为 `info_insufficient` 时，`data_content` 可以为空，`notes` 说明缺失了哪些数据。
 
 ## 不能做什么
 
@@ -72,7 +59,7 @@ gen-data 专项。你的任务是为 PYPL 研究收集公开数据，只使用 `
   "request_id": "...",
   "agent": "gen-data",
   "status": "info_insufficient",
-  "data_points": [],
+  "data_content": "",
   "notes": "信息不足：无法获取 [具体数据项]，来源不可访问或晚于 as-of。"
 }
 ```

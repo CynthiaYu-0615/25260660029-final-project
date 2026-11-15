@@ -1,4 +1,5 @@
-## 第 1 条 · 补录
+## 第 1 条 · 2026-11-15 17:35:14
+~~~~
 update agents.md
 
 content
@@ -10,8 +11,10 @@ github repo needs commit and push frequently, you can decide when to commit and 
 
 i will use either chinese or english with you but you need to response in chinese,
 and use chinese in agents md and other skills, prompts, and code comments.
+~~~~
 
-## 第 2 条 · 补录
+## 第 2 条 · 2026-11-15 17:36:24
+~~~~
 continue update @AGENTS.md 
 
 about github, 
@@ -19,13 +22,17 @@ about github,
 all commits shall be made on behalf of 
 git config user.name "于欣荷"
 git config user.email "cynthiayu615@gmail.com"
+~~~~
 
-## 第 3 条 · 补录
+## 第 3 条 · 2026-11-15 17:38:47
+~~~~
 copy /Users/guchen/Documents/notes/02-projects/wife/attachments/20261107-金融AI长程智能体工作流/作业要求.pdf into assets/ folder of this repo and refer it in agents saying this is 作业要求
 
 and make a README.md saying briefly about this repo (only necessary info for human reviewer) and say details goes to @AGENTS.md
+~~~~
 
-## 第 4 条 · 补录
+## 第 4 条 · 2026-11-15 17:50:05
+~~~~
 我们要做一个 Kimi Code 插件,叫 pypl,用来持续研究美股 PayPal(PYPL)。这是《金融人工智能编程》的期末作业,要把课上讲的「完整架构」做出来:Orchestrator、Generator、Critic 三个角色。我负责管理整个系统,具体的活由 agent 干。系统只做研究,不会买卖任何东西。
 
 先看一下 AGENTS.md 和 assets/作业要求.pdf,了解一下约定和作业要求。
@@ -50,8 +57,10 @@ evidence/                   # 运行、核验、恢复的证据
 占位文件也要符合 Kimi Code 插件的格式,保证 /plugins install pypl 之后能被正常加载,不能报错:command 和 agent 文件要有 frontmatter(agent 要有 name 和 description,command 要有 description),skill 目录里要放带 name 和 description 的 SKILL.md,manifest 里把 commands、skills、agents 的路径都声明好。其他文件每个写一行中文注释说明用途就行。
 
 README.md 和 AGENTS.md 已经有了,别覆盖。
+~~~~
 
-## 第 5 条 · 补录
+## 第 5 条 · 2026-11-15 17:53:51
+~~~~
 我装了一下这个插件,/plugins info pypl 报错了:kimi.plugin.json 里 skills、agents、commands 的路径必须以 ./ 开头,现在 skills 是 0 个,agents 全是 error,commands 是 warn。先把这个修掉,建议直接写目录:"commands": "./commands/"、"skills": "./skills/"、"agents": "./agents/"。
 
 agent 文件的 name 也要用小写加连字符(kebab-case),现在 Analyst 这种写法会被跳过。
@@ -69,8 +78,10 @@ agent 文件的 name 也要用小写加连字符(kebab-case),现在 Analyst 这�
 - 六个专项的 tools 先只给 Read,不要给 Write 和 Bash。
 
 这一步还是只改骨架和 frontmatter,不写具体内容。
+~~~~
 
-## 第 6 条 · 补录
+## 第 6 条 · 2026-11-15 17:58:44
+~~~~
 接下来讲一下这个插件到底给用户做什么。用户只有四类操作:
 
 1. 登记持仓变化:我买入或卖出了 PYPL,告诉系统数量和价格。系统只是登记,不会真的交易。命令 /pypl:trade。
@@ -92,9 +103,11 @@ Kimi Code 自己没有定时器,所以「每日」就是我每天(演示时手�
 - 写 design/task.md:任务描述、目标用户(持有 PYPL 的个人投资者)、现在人是怎么做的、各个阶段和依赖、上面这五种触发条件、允许使用的资料来源和信息截止时点(as-of)规则、产出和验收标准(要能逐条判定通过或不通过)、为什么需要持久化的工作流而不是一次性脚本。
 
 先不要写 agent 的细节和脚本。
+~~~~
 
-## 第 7 条 · 补录
-我想把我在这个项目里每一次发给你的话都记下来,方便以后回看我是如何一步步指挥你做这个作业的。请这样做:
+## 第 7 条 · 2026-11-15 18:04:07
+~~~~
+我想把我在这个项目里每一次发给你的话都记下来,方便以后回看我是怎么一步步指挥你做这个作业的。请这样做:
 
 1. 在 AGENTS.md 的「开发约定」里加一条规则:以后在这个仓库里的每一个 Kimi session,每次我发来消息,你都要先把我这条消息原文追加到仓库根目录的 CONTEXT.md 末尾,再去做其他事。只记我的输入,不记你的回复;原文不要改;只能往后追加,不能改或删以前的记录。每条格式:
 
@@ -108,8 +121,10 @@ N 从 1 递增。新 session 第一次回复前,先读一下 CONTEXT.md 最后�
 3. 我这条消息也要记,作为最后一条。
 
 做完后告诉我 CONTEXT.md 一共记了几条,列出每条的编号和第一行就行。其他文件不要动。
+~~~~
 
-## 第 8 条 · 补录
+## 第 8 条 · 2026-11-15 18:05:56
+~~~~
 接下来把角色之间的契约和规则定下来，对应课上讲的「角色契约」「契约与边界」「停止与恢复」「验收」几页。先改两处概念：
 
 1. /pypl:evo 不是 Critic 打回后的修订循环。修订循环是 Orchestrator 内部做的：Critic 返回问题项，Orchestrator 出修复任务包发回 Generator，有最大轮数。/pypl:evo 是系统演进：我想改提示词或规则时，对着固定的基线样例比较改动前后的效果，决定采纳还是拒绝，批准权在我，改动要有版本号、能回滚。请相应改 design/task.md（触发条件 5 和阶段说明）和 pypl/commands/evo.md 的描述。
@@ -124,8 +139,10 @@ schema.md：定义这些数据长什么样：请求（request_id、触发原因�
 rules.md：限制和规则，数字直接定下来——最大修订轮数 3、单步重试 2 次且退避、单次运行工具调用不超过 60 次、单次运行不超过 20 分钟；终态分开记录原因：accepted、rejected、blocked、exhausted、stalled、user_stopped，其中 exhausted 绝不等于通过；恢复规则：先核对完成标记、ID 和哈希，只做还没做完的，已经完成的直接返回保存的结果；as-of 规则：财报前的报告不能引用之后的信息。
 
 只写这些规则和契约，先不要写 agent 的正文和脚本。
+~~~~
 
-## 第 9 条 · 补录
+## 第 9 条 · 2026-11-15 18:09:28
+~~~~
 接下来写 pypl/agents/ 下八个 agent 的正文。先读一下 references/ 里的 role-cards.md、schema.md、rules.md，按里面的契约来，不要自己另起一套。写之前先对齐三处：
 
 1. role-cards.md 里 gen-data 只有 Read，没法取数；critic-evidence 只有 Read，没法独立核对来源。工具以我下面写的为准，请同步改 role-cards.md 的「可用工具」。
@@ -143,3 +160,34 @@ rules.md：限制和规则，数字直接定下来——最大修订轮数 3、�
 所有 agent 都不给 Write、Edit、Bash。最后一条消息必须是完整、自成一体的结果，因为调用你的上级只能看到这一条。
 
 写完后列一张表：角色、tools、subagents，我对着 role-cards.md 核一下。脚本这一步还是不写。
+~~~~
+
+## 第 10 条 · 2026-11-15 18:13:43
+~~~~
+先处理一下 CONTEXT.md，现在有几个问题：
+1. 全部写成了「补录」，包括你后来追加的第 8、9 条。其实每条都有真实时间：会话记录里 ~/.kimi-code/sessions/wd_25260660029-final-project_5d5444b88f59/session_*/agents/main/wire.jsonl 中，type 是 turn.prompt 且 origin.kind 是 user 的事件，time 字段是毫秒时间戳，转成本地时间，格式 2026-11-15 17:35:14。请把第 1 到第 9 条的「补录」都换成对应的真实时间，并用 wire.jsonl 核对条数和顺序对得上。
+2. 有些原文里本身带「## 」开头的行（比如第 7 条里有一行 ## 第 N 条 · 日期 时间），会和真正的标题混在一起。把每条原文放进用 ~~~~ 围起来的块里，原文一个字不改。
+3. 同步更新 AGENTS.md 里那条会话记录规则：以后新增的每条都用当前真实时间（可以用 date 命令取），不要再写「补录」；格式是标题 ## 第 N 条 · 时间，下面是 ~~~~ 围起来的原文。
+4. 这条消息本身记为第 10 条，时间用真实时间，不要写补录。
+
+接着改一个设计问题：现在 agent 的输出里让它们自己返回产物的 path 和 sha256，但是它们都没有写权限，也算不了哈希，这些值只会是编的。改成这样：
+- agent（generator、critic 和各专项）只返回内容，不返回 path 和 sha256。专项之间、负责人和专项之间直接传内容。
+- 候选报告和证据包由 Orchestrator 调用控制器脚本落盘，由脚本算 sha256，再把脚本返回的路径和哈希交给下游。Critic 用 Read 读控制器写好的文件，控制器在派 Critic 之前先核对哈希。
+请据此修改 generator、critic、gen-data 的输出格式和说明，schema.md 里 artifacts 的写法保持不变（那是控制器写的），role-cards.md 如有相关描述也一起改。
+
+然后更正「没有定时器」的说法。Kimi 有会话内定时工具 CronCreate、CronList、CronDelete：会话开着才会触发，循环任务 7 天后过期，创建需要我批准。所以：
+- /pypl:event 登记财报日期时，除了控制器写 events.json，还用 CronCreate 登记两个一次性提醒（财报前两天、财报发布后），提醒触发时让会话去跑 ping 流程。
+- /pypl:ping 第一次运行时，可以用 CronCreate 登记一条每天循环的检查。
+- 文档里如实写明局限：会话关了就不触发，循环任务 7 天后要重新登记；演示时也可以手动运行。
+请改 design/task.md 里「没有定时器」的相关说法。
+
+接着写 references/controller.md：约定控制器脚本 pypl/scripts/pypl.py 有哪些动作（子命令）、入参、返回的 JSON，至少包括：初始化、登记持仓、登记事件、新建请求、落盘产物并算哈希、核对哈希、记录问题项、推进阶段、写终态、恢复。只定义契约，还不要写代码。
+
+最后写命令和 skill 的正文（中文）：
+- pypl/skills/start/SKILL.md：Orchestrator 的完整工作流，用 sessionStart 注入。从收到触发到终态的每一步：新建请求、派 generator、落盘并核对哈希、派 critic、判断本轮是否通过、问题项汇总成修复任务包发回 generator、最多 3 轮、连续两轮通过才 accepted、各种终态怎么处理。accepted 之后要问我是否批准归档（用 AskUserQuestion）。调脚本时用 skill 所在目录推出来的绝对路径，不要写相对路径；.pypl/ 放在我启动 Kimi 的目录下。Orchestrator 自己不写 .pypl/，不做交易。
+- pypl/skills/evo/SKILL.md：系统演进流程：固定基线样例、改动前后对比、我批准、版本号、回滚。
+- pypl/commands/ 五个文件的正文：每个说明它做什么，并让 Orchestrator 按对应 skill 的流程执行，用 $ARGUMENTS 接收参数。
+
+脚本代码这一步还不写。写完告诉我改了哪些文件。
+~~~~
+

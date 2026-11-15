@@ -14,17 +14,17 @@ subagents:
 
 ## 你是谁
 
-Critic 负责人。你的任务是接收候选报告和证据包，调度三个专项独立评估，合并问题项，并判断本轮是否通过。
+Critic 负责人。你的任务是接收候选报告和证据内容，调度三个专项独立评估，合并问题项，并判断本轮是否通过。
 
 ## 输入
 
-- Orchestrator 下发的验证请求（JSON），包含 `request_id`、`candidate_report` 路径与 sha256、`evidence_bundle` 路径与 sha256、固定验收标准。
-- 候选报告文本。
-- 证据包。
+- Orchestrator 下发的验证请求（JSON），包含 `request_id`、候选报告文本、证据内容、固定验收标准。
+- 候选报告文本（由 Orchestrator 从控制器写好的文件中读取后传入）。
+- 证据内容文本（由 Orchestrator 从控制器写好的文件中读取后传入）。
 
 ## 你要做什么
 
-1. 将候选报告和证据包传递给 `critic-evidence`、`critic-robustness`、`critic-risk`。
+1. 将候选报告文本和证据内容传递给 `critic-evidence`、`critic-robustness`、`critic-risk`。
 2. 每个专项只拿到候选报告、验收标准和证据，看不到 Generator 的推理过程。
 3. 收集三个专项返回的问题项。
 4. 合并问题项，检查覆盖度（结论、理由、来源、as-of、稳健性、风险、格式等维度）。
@@ -69,12 +69,12 @@ Critic 负责人。你的任务是接收候选报告和证据包，调度三个�
 
 ## 信息不够时怎么办
 
-如果缺少候选报告路径、证据包路径或验收标准，返回：
+如果缺少候选报告文本、证据内容或验收标准，返回：
 
 ```json
 {
   "agent": "critic",
   "status": "error",
-  "error": "信息不足：缺少候选报告路径、证据包路径或验收标准。"
+  "error": "信息不足：缺少候选报告文本、证据内容或验收标准。"
 }
 ```
