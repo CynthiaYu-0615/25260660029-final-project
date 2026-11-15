@@ -1,0 +1,6 @@
+{
+  "version": "v0.1-baseline",
+  "forbidden_words": ["买入", "卖出", "下单"],
+  "numeric_tolerance": 0.005,
+  "min_reasons": 3
+}

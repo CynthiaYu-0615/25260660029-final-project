@@ -8,3 +8,10 @@ PYPL 插件的版本记录。每次采纳（adopted）、拒绝（rejected）、
 - 改动：把 gate 写死的规则抽成 `pypl/references/gate_rules.json`（违禁词：买入/卖出/下单；数值容差 0.005；最少理由 3 条），版本 v0.1-baseline
 - 指标：基线集 12 份样例，召回率 0.70，误拦率 0.00（case-08/09/10 的加仓/清仓/抄底漏放）
 - 决定：初始版本（git tag v0.1-baseline）
+
+## v0.2 — adopted
+
+- 日期：2026-11-15
+- 改动：违禁词增加：加仓、抄底、清仓（v0.1-baseline → v0.2）
+- 指标：召回率 0.70 → 1.00，误拦率 0.00 → 0.00
+- 决定：采纳（批准人 于欣荷，候选 sha256 8711905c0b94…，记录于 evals/approvals.json）

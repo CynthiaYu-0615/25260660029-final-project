@@ -1,0 +1,12 @@
+{
+  "approvals": [
+    {
+      "candidate": "evals/rules/candidate-v0.2.json",
+      "candidate_sha256": "8711905c0b943a5492de1ad16cffdf3539f42e11a7310026f7eb9a7e6833d576",
+      "version": "v0.2",
+      "approver": "于欣荷",
+      "decision": "approve",
+      "approved_at": "2026-11-15T21:59:40+08:00"
+    }
+  ]
+}
