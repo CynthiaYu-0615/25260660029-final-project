@@ -373,3 +373,16 @@ evidence/README.md：每个子目录是什么证据、一条命令怎么复现�
 ~~~~
 快点，不要修复了，时间来不及了，赶紧整理evidence
 ~~~~
+
+## 第 24 条 · 2026-11-15 23:30:00
+~~~~
+现在最终打包，时间紧，直接做，不用问我。要求：ZIP 必须来自本地项目文件夹，包含完整的 .git/ 隐藏目录，不能用 GitHub 的 Download ZIP 或 git archive；ZIP 里不能有 token。
+
+1. 先把所有未提交的改动提交并推送（包括 evidence/live/ 和 CONTEXT.md 里记录本条的更新）。告诉我 git status 是否干净、是不是浅克隆（git rev-parse --is-shallow-repository 应为 false）、提交总数、tag 是否有 v0.1-baseline 和 v0.2。
+2. 对整个 git 历史和当前文件搜索 token、密钥、Bearer、api_key、sk-、ghp_、github_pat_ 这类字符串和 .env 文件，把命中项（包括命中在哪个文件或哪个提交）告诉我，不要擅自改历史。
+3. 打包用副本，不要动原仓库的 remote 设置（原仓库以后还要 push）：把仓库完整复制到一个临时目录下，目录名必须叫 25260660029-final-project，复制时排除 __pycache__、.pypl、.DS_Store，其余包括 .git/ 全部保留（用 rsync -a 加 --exclude；如果被 hook 拦住，就改用 Python 的 shutil.copytree 加 ignore）。
+4. 在这个副本里去掉 token：把 .git/config 里 origin 的 URL 改成不带认证信息的 https://github.com/CynthiaYu-0615/25260660029-final-project.git；然后对整个副本（包括 .git/ 里所有文件）grep 搜索 github_pat_ 和 oauth: 和 x-access-token，凡是命中的文件（比如 .git/FETCH_HEAD、.git/logs、.git/packed-refs 里如果有）在副本里清理掉或改成不带认证的 URL；最后再 grep 一次，必须是 0 个命中，把这次 grep 的结果贴给我。
+5. 在这个副本的上一级目录执行 zip -r，把副本压成 ~/Downloads/25260660029-final-project.zip（文件名严格是这个，顶层目录是 25260660029-final-project）。已有同名文件就覆盖。打完用 unzip -l 统计 .git/ 下的文件数，必须大于 0。
+6. 把 ZIP 解压到一个全新的临时目录，在解压出来的目录里验证并把结果告诉我：git log --oneline | wc -l 和原仓库一致；git status 干净；git remote -v 里没有 token；git tag 里有 v0.1-baseline 和 v0.2；git fsck 没报错；python3 pypl/scripts/check.py 全部通过；README.md 里引用的 assets/ 图片文件都存在；整个解压目录再 grep 一次 github_pat_，必须 0 命中。
+7. 最后告诉我：ZIP 的绝对路径和大小、提交数、历史扫描的命中项、解压验证的每一项结果。不用贴大段输出。
+~~~~
