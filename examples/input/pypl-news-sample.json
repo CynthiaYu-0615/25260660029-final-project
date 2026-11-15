@@ -1,0 +1,45 @@
+{
+  "source_url": "https://stockanalysis.com/stocks/pypl",
+  "source_type": "stockanalysis.com 新闻聚合区",
+  "retrieved_at": "2026-11-15T18:30:00+08:00",
+  "as_of": "2026-11-15",
+  "items": [
+    {
+      "title": "PayPal Holdings Transcript: KBW Fintech Ecosystem Conference 2026",
+      "date": "4 days ago",
+      "source": "Transcripts",
+      "is_major": false
+    },
+    {
+      "title": "Venmo Adds Receipt Scanning to Simplify Bill Splitting",
+      "date": "5 days ago",
+      "source": "PYMNTS",
+      "is_major": false
+    },
+    {
+      "title": "PayPal’s (PYPL) Turnaround Still Needs Proof",
+      "date": "5 days ago",
+      "source": "TipRanks",
+      "is_major": false
+    },
+    {
+      "title": "Tuesday's First Moves: SOFI & RCL Rally After Earnings, PYPL Beats",
+      "date": "18 days ago",
+      "source": "Schwab Network",
+      "is_major": false
+    },
+    {
+      "title": "PayPal Holdings Earnings Call Transcript: Q3 2026",
+      "date": "18 days ago",
+      "source": "Transcripts",
+      "is_major": false
+    },
+    {
+      "title": "PayPal Holdings Slides: Q3 2026",
+      "date": "18 days ago",
+      "source": "Filings",
+      "is_major": false
+    }
+  ],
+  "notes": "当前 30 天内未出现裁员、收购并购、拆分、CXO 变动等重大事件。"
+}

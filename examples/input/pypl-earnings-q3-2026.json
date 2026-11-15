@@ -1,0 +1,31 @@
+{
+  "source_url": "https://www.sec.gov/Archives/edgar/data/1633917/000163391726000088/pypl-20260930.htm",
+  "source_type": "SEC EDGAR 10-Q",
+  "retrieved_at": "2026-11-15T18:20:00+08:00",
+  "as_of": "2026-09-30",
+  "period": "Q3 2026",
+  "total_net_revenues": {
+    "value": 8584,
+    "unit": "million USD",
+    "period": "three months ended 2026-09-30"
+  },
+  "net_income": {
+    "value": 1073,
+    "unit": "million USD",
+    "period": "three months ended 2026-09-30"
+  },
+  "diluted_eps": {
+    "value": 1.25,
+    "unit": "USD",
+    "period": "three months ended 2026-09-30"
+  },
+  "nine_month_total_net_revenues": {
+    "value": 25619,
+    "unit": "million USD"
+  },
+  "nine_month_net_income": {
+    "value": 3290,
+    "unit": "million USD"
+  },
+  "notes": "数据从 SEC 10-Q HTML 中解析得到。指引/Outlook 部分因 HTML 结构复杂未完整提取。"
+}

@@ -1,0 +1,29 @@
+{
+  "source_url": "https://data.sec.gov/submissions/CIK0001633917.json",
+  "source_type": "SEC EDGAR Submissions API",
+  "retrieved_at": "2026-11-15T18:20:00+08:00",
+  "as_of": "2026-11-15",
+  "filings": [
+    {
+      "date": "2026-10-30",
+      "form": "4",
+      "description": "Insider transaction"
+    },
+    {
+      "date": "2026-10-27",
+      "form": "10-Q",
+      "description": "Q3 2026 quarterly report"
+    },
+    {
+      "date": "2026-10-27",
+      "form": "8-K",
+      "description": "Current report"
+    },
+    {
+      "date": "2026-10-16",
+      "form": "4",
+      "description": "Insider transaction"
+    }
+  ],
+  "notes": "SEC API 返回了最近申报列表；8-K 标题因 SEC HTML 访问限制未完整获取。"
+}
