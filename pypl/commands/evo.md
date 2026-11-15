@@ -1,7 +1,7 @@
 ---
-description: 进入演化迭代，由 Orchestrator 调度 Generator 与 Critic 进行多轮评估。
+description: 当上一版报告被 Critic 打回时，进入修订演化循环，直到报告通过验证。
 ---
 
-# /pypl evo
+# /pypl:evo
 
-启动 PYPL 研究的演化迭代。
+Critic 验证不通过时， Generator 在 Critic 反馈基础上修订报告。

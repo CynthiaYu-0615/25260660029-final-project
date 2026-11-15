@@ -4,5 +4,8 @@
   "description": "PayPal (PYPL) 持续研究插件，用于长程智能体工作流演示。",
   "commands": "./commands/",
   "skills": "./skills/",
-  "agents": "./agents/"
+  "agents": "./agents/",
+  "sessionStart": {
+    "skill": "start"
+  }
 }

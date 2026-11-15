@@ -1,7 +1,7 @@
 ---
-description: 启动一个新的 PYPL 研究会话，初始化目标、状态与上下文。
+description: 手动触发生成一份 PYPL 研究报告。
 ---
 
-# /pypl start
+# /pypl:start
 
-启动 PYPL 研究会话。
+用户要求立即跑一次 PYPL 研究并生成报告。

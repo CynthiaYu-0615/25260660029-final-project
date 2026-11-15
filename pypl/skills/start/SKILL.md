@@ -1,7 +1,6 @@
 ---
 name: start
 description: 初始化 PYPL 研究会话，加载目标、约束和历史上下文，并注入 Orchestrator 职责。
-sessionStart: true
 ---
 
 # Start
