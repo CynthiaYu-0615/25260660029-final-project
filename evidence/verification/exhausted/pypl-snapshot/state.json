@@ -1,0 +1,60 @@
+{
+  "requests": {
+    "req-20261115-70a55bbd": {
+      "request_id": "req-20261115-70a55bbd",
+      "trigger": "manual",
+      "as_of": "2026-11-15T21:44:42+08:00",
+      "phase": "final",
+      "round": 2,
+      "max_rounds": 3,
+      "artifacts": {
+        "candidate_report": {
+          "path": ".pypl/reports/report-req-20261115-70a55bbd-r0.md",
+          "sha256": "f1ab1dec03ce9a4d35d584ed0d47cf4f03a4e3163b4fb93356371da16130ec2f"
+        }
+      },
+      "issues": [
+        {
+          "issue_id": "issue-b-0",
+          "severity": "major",
+          "dimension": "evidence",
+          "location": "报告第 3 节",
+          "description": "（假 Critic）理由第 2 条缺少来源标注",
+          "fix_requirement": "补充来源 URL 和获取时间",
+          "created_by": "critic-evidence",
+          "status": "open",
+          "round_created": 1
+        },
+        {
+          "issue_id": "issue-b-1",
+          "severity": "major",
+          "dimension": "evidence",
+          "location": "报告第 3 节",
+          "description": "（假 Critic）理由第 2 条缺少来源标注",
+          "fix_requirement": "补充来源 URL 和获取时间",
+          "created_by": "critic-evidence",
+          "status": "open",
+          "round_created": 1
+        },
+        {
+          "issue_id": "issue-b-2",
+          "severity": "major",
+          "dimension": "evidence",
+          "location": "报告第 3 节",
+          "description": "（假 Critic）理由第 2 条缺少来源标注",
+          "fix_requirement": "补充来源 URL 和获取时间",
+          "created_by": "critic-evidence",
+          "status": "open",
+          "round_created": 1
+        }
+      ],
+      "consecutive_passes": 0,
+      "version": "v0.1.0",
+      "final_state": "exhausted",
+      "final_reason": "达到最大修订轮数 3 仍未通过",
+      "created_at": "2026-11-15T13:44:42+00:00",
+      "updated_at": "2026-11-15T13:44:42+00:00"
+    }
+  },
+  "updated_at": "2026-11-15T13:44:42+00:00"
+}

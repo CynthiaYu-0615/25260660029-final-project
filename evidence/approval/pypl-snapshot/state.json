@@ -1,0 +1,51 @@
+{
+  "requests": {
+    "req-20261115-1fc9cca3": {
+      "request_id": "req-20261115-1fc9cca3",
+      "trigger": "manual",
+      "as_of": "2026-11-15T21:44:42+08:00",
+      "phase": "final",
+      "round": 0,
+      "max_rounds": 3,
+      "artifacts": {
+        "sec_facts": {
+          "path": ".pypl/evidence/sec_facts-req-20261115-1fc9cca3-r0.json",
+          "sha256": "b91593f83902f34ff840cc8db04d69b381c93bb1e18d475461ab5808e8ae5284"
+        },
+        "candidate_report": {
+          "path": ".pypl/reports/report-req-20261115-1fc9cca3-r0.md",
+          "sha256": "1c08c93b56fd2ad84f52e4107fc1ce1159443ae4eda14768efbf36ba305e1c3a"
+        }
+      },
+      "issues": [],
+      "consecutive_passes": 2,
+      "version": "v0.1.0",
+      "final_state": "accepted",
+      "final_reason": "用户 于欣荷 批准归档",
+      "created_at": "2026-11-15T13:44:42+00:00",
+      "updated_at": "2026-11-15T13:44:46+00:00"
+    },
+    "req-20261115-cf41ad80": {
+      "request_id": "req-20261115-cf41ad80",
+      "trigger": "manual",
+      "as_of": "2026-11-15T21:44:46+08:00",
+      "phase": "final",
+      "round": 0,
+      "max_rounds": 3,
+      "artifacts": {
+        "candidate_report": {
+          "path": ".pypl/reports/report-req-20261115-cf41ad80-r0.md",
+          "sha256": "6bab4e2d0609b69c78d59cc71919a707767c2a4e47f8c06702e38b79d1aa8c3f"
+        }
+      },
+      "issues": [],
+      "consecutive_passes": 2,
+      "version": "v0.1.0",
+      "final_state": "user_stopped",
+      "final_reason": "用户 于欣荷 拒绝归档",
+      "created_at": "2026-11-15T13:44:46+00:00",
+      "updated_at": "2026-11-15T13:44:46+00:00"
+    }
+  },
+  "updated_at": "2026-11-15T13:44:46+00:00"
+}

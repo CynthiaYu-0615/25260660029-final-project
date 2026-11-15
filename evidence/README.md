@@ -2,7 +2,7 @@
 
 **重要区分**：本目录下除 `live/` 外的证据，都是演示脚本 `pypl/scripts/demo.py` 用**假 agent 返回值**驱动**真实控制器**（`pypl/scripts/pypl.py`）和**真实安全钩子**（`pypl/hooks/pre_tool_use.py`）得到的。它们证明控制器的状态机、关卡、终态、恢复和拦截逻辑真实可行，但不包含 LLM 推理过程。**真实 LLM 端到端运行的证据放在 `live/`**，与演示证据严格区分，两者在报告和答辩中不可混用。
 
-每个演示场景在临时工作目录里运行，结束后由 demo.py 用 Python（非 Bash cp）把状态快照（`.pypl/` 完整副本，含 `state.json`、`approvals.json`、`demo-log.jsonl`、`guard-log.jsonl` 等）拷到对应子目录，并附 `summary.json`。`demo-log.jsonl` 每行带时间戳、git 提交号、request_id、步骤名和该步的输入输出 JSON。
+每个演示场景在临时工作目录里运行，结束后由 demo.py 用 Python（非 Bash cp）把状态快照（运行时 `.pypl/` 的完整副本，存为 `pypl-snapshot/`，含 `state.json`、`approvals.json`、`demo-log.jsonl`、`guard-log.jsonl` 等）拷到对应子目录，并附 `summary.json`。快照目录不叫 `.pypl/` 是为了避开 `.gitignore` 对运行时状态的忽略规则，让证据可以入库。`demo-log.jsonl` 每行带时间戳、git 提交号、request_id、步骤名和该步的输入输出 JSON。
 
 ## 复现
 

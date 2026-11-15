@@ -193,9 +193,11 @@ def _init_request(workspace, logger, trigger="manual", init=True):
 
 
 def _copy_evidence(workspace, out_subdir, summary):
+    # 快照目录不叫 .pypl/（.gitignore 会忽略任何 .pypl/ 目录），
+    # 用 pypl-snapshot/ 保证证据可以入库
     os.makedirs(out_subdir, exist_ok=True)
     src_pypl = os.path.join(workspace, ".pypl")
-    dst_pypl = os.path.join(out_subdir, ".pypl")
+    dst_pypl = os.path.join(out_subdir, "pypl-snapshot")
     if os.path.exists(dst_pypl):
         shutil.rmtree(dst_pypl)
     shutil.copytree(src_pypl, dst_pypl)

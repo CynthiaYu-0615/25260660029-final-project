@@ -48,7 +48,7 @@ def test_demo_scenario_a_blocked_then_pass(tmp_path):
     assert r["v2_revise"] is True
     assert r["final_next_action"] == "await_approval"
     _summary_file(tmpdir, os.path.join("verification", "blocked-then-pass"))
-    pypl = os.path.join(tmpdir, "verification", "blocked-then-pass", ".pypl")
+    pypl = os.path.join(tmpdir, "verification", "blocked-then-pass", "pypl-snapshot")
     assert os.path.exists(os.path.join(pypl, "state.json"))
     assert os.path.exists(os.path.join(pypl, "demo-log.jsonl"))
 
@@ -71,7 +71,7 @@ def test_demo_scenario_c_approval(tmp_path):
     assert r["approve_final_state"] == "accepted"
     assert r["reject_final_state"] == "user_stopped"
     _summary_file(tmpdir, "approval")
-    approvals = json.load(open(os.path.join(tmpdir, "approval", ".pypl", "approvals.json"), encoding="utf-8"))
+    approvals = json.load(open(os.path.join(tmpdir, "approval", "pypl-snapshot", "approvals.json"), encoding="utf-8"))
     results = [a["result"] for a in approvals["approvals"]]
     assert "refused" in results and "approved" in results and "rejected" in results
 
@@ -104,7 +104,7 @@ def test_demo_scenario_f_guard(tmp_path):
     assert r["blocked_count"] == 4
     assert r["allowed_count"] == 2
     _summary_file(tmpdir, "guard")
-    guard_log = os.path.join(tmpdir, "guard", ".pypl", "guard-log.jsonl")
+    guard_log = os.path.join(tmpdir, "guard", "pypl-snapshot", "guard-log.jsonl")
     assert os.path.exists(guard_log)
     lines = [json.loads(x) for x in open(guard_log, encoding="utf-8") if x.strip()]
     assert len(lines) == 4
