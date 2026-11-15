@@ -73,7 +73,9 @@ def test_evo_baseline_reproducible(tmp_path):
 
 def test_evo_compare_suggests_adopt_and_rejects_regression(tmp_path):
     root = _make_root(tmp_path)
-    base = os.path.join(root, "pypl", "references", "gate_rules.json")
+    # 基线固定用 v0.1-baseline 的规则快照（不依赖仓库当前采纳到哪一版）
+    base = os.path.join(root, "base.json")
+    shutil.copy2(os.path.join(REPO_ROOT, "evals", "rules", "v0.1-baseline.gate_rules.json"), base)
     good = os.path.join(root, "good.json")
     bad = os.path.join(root, "bad.json")
     _write_rules(good, "v-good", ["买入", "卖出", "下单", "加仓", "清仓", "抄底"])
@@ -119,6 +121,7 @@ def test_evo_adopt_requires_approval(tmp_path):
 def test_evo_rollback_restores_metrics(tmp_path):
     root = _make_root(tmp_path)
     rules_path = os.path.join(root, "pypl", "references", "gate_rules.json")
+    original = json.load(open(rules_path, encoding="utf-8"))
 
     def git(*args):
         return subprocess.run(["git", "-C", root] + list(args),
@@ -135,7 +138,7 @@ def test_evo_rollback_restores_metrics(tmp_path):
     fp_before = _fingerprint(r0.stdout)
 
     # 模拟一次被采纳的改动
-    _write_rules(rules_path, "v-test-new", ["买入", "卖出", "下单", "抄底"])
+    _write_rules(rules_path, "v-test-new", original["forbidden_words"] + ["抄底"])
     r1 = _run_evo(["run", "--rules", rules_path], root)
     fp_modified = _fingerprint(r1.stdout)
     assert fp_modified != fp_before
@@ -143,7 +146,8 @@ def test_evo_rollback_restores_metrics(tmp_path):
     r2 = _run_evo(["rollback", "--to", "v-test-baseline"], root)
     assert r2.returncode == 0, r2.stderr
     restored = json.load(open(rules_path, encoding="utf-8"))
-    assert restored["version"] == "v0.1-baseline"
+    assert restored.get("version") == original.get("version")
+    assert restored.get("forbidden_words") == original.get("forbidden_words")
 
     r3 = _run_evo(["run", "--rules", rules_path], root)
     fp_after = _fingerprint(r3.stdout)
