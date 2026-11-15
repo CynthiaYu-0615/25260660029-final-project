@@ -34,6 +34,7 @@ EOF
 | `record_trade` | 登记持仓变化。 |
 | `record_event` | 登记财报日期，生成事件，返回提醒触发时间。 |
 | `new_request` | 新建研究请求，生成 `request_id`。 |
+| `fetch_sec` | 从 SEC XBRL 接口确定性取最近一期财报核心数字（收入、净利润、稀释 EPS）。 |
 | `persist_artifact` | 将产物内容落盘并计算 sha256。 |
 | `verify_hash` | 核对产物路径与 sha256 是否一致。 |
 | `gate_report` | 候选报告送 Critic 前的确定性检查。 |
@@ -170,6 +171,56 @@ EOF
 }
 ```
 
+## fetch_sec
+
+确定性取数：由控制器代码（`pypl/runtime/pypl/fetch.py`）直接访问 SEC XBRL 接口，不经 agent、不用 Bash。只使用 Python 标准库 urllib；只访问白名单域名 `data.sec.gov` / `www.sec.gov`；请求带声明项目名与联系邮箱的 User-Agent；相邻请求间隔不小于 1 秒；超时 30 秒；失败按 `rules.md` 重试 2 次并指数退避。
+
+**输入**：
+
+```json
+{
+  "as_of": "2026-11-15",
+  "allow_recorded": false
+}
+```
+
+- `as_of`：必填，信息截止时点。
+- `allow_recorded`：缺省为 false。取数失败时若未显式置 true，返回 error，绝不悄悄使用录制数据。
+
+**行为**：
+
+- 依次取三个概念：`Revenues`、`NetIncomeLoss`、`EarningsPerShareDiluted`。
+- as-of 过滤在代码内完成：只选 `form` 为 10-Q/10-K 且 `filed` 不晚于 `as_of` 的条目；取 period end 最新一期；同一期末多条时优先取 start→end 约三个月的单季数据。
+- 任概念失败：默认返回 error；仅当 `allow_recorded=true` 时退到 `examples/input/pypl-earnings-q3-2026.json`，且返回标 `recorded=true`。
+
+**输出**（status=ok）：
+
+```json
+{
+  "status": "ok",
+  "data": {
+    "as_of": "2026-11-15",
+    "retrieved_at": "2026-11-15T18:50:00+08:00",
+    "recorded": false,
+    "facts": {
+      "revenues": {
+        "concept": "Revenues",
+        "value": 8584000000,
+        "unit": "USD",
+        "start": "2026-07-01",
+        "end": "2026-09-30",
+        "accession": "0001633917-26-000087",
+        "form": "10-Q",
+        "filed": "2026-10-27",
+        "source_url": "https://data.sec.gov/api/xbrl/companyconcept/CIK0001633917/us-gaap/Revenues.json"
+      },
+      "net_income": { "...": "..." },
+      "diluted_eps": { "...": "..." }
+    }
+  }
+}
+```
+
 ## persist_artifact
 
 **输入**：
@@ -177,7 +228,7 @@ EOF
 ```json
 {
   "request_id": "req-20261115-001",
-  "name": "candidate_report|evidence_bundle",
+  "name": "candidate_report|evidence_bundle|sec_facts",
   "content": "产物内容"
 }
 ```
@@ -233,9 +284,12 @@ EOF
   "request_id": "req-20261115-001",
   "report_text": "## 候选报告...",
   "evidence_text": "## 证据...",
-  "as_of": "2026-11-15T09:00:00+08:00"
+  "as_of": "2026-11-15T09:00:00+08:00",
+  "sec_facts": { "facts": { "...": "..." } }
 }
 ```
+
+- `sec_facts`：可选；提供时启用数值交叉核对。可以传对象或 JSON 字符串（一般为 `fetch_sec` 的 `data` 字段）。
 
 **行为**：
 
@@ -247,6 +301,7 @@ EOF
   5. 正文中无「买入 / 卖出 / 下单」等执行性指令词。
   6. 封面的 as-of 不晚于请求的 as-of。
   7. 证据包中每条来源都有 URL 和获取时间，且获取时间不晚于 as-of。
+  8. 数值交叉核对（提供 `sec_facts` 时）：报告必须含 `key_figures` JSON 块；其中收入、净利润、稀释 EPS 换算到基础单位后与 `sec_facts` 一致（四舍五入容差 0.5%）。不一致返回失败项 `numeric_mismatch` 并说明哪个数不一致。
 
 **输出**：
 
@@ -257,7 +312,8 @@ EOF
     "passed": true|false,
     "failures": [
       "缺少风险提示部分",
-      "结论不是增持/减持/持有不动之一"
+      "结论不是增持/减持/持有不动之一",
+      "numeric_mismatch: 收入不一致（key_figures={...} vs sec_facts={...}）"
     ]
   }
 }

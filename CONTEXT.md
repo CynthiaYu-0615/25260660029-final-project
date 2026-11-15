@@ -227,3 +227,23 @@ rules.md：限制和规则，数字直接定下来——最大修订轮数 3、�
 
 做完告诉我：Datasource 实际有哪些数据源、第 3 步每项拿到没有、调用了几次。其他文件不要动。
 ~~~~
+
+## 第 14 条 · 2026-11-15 18:49:26
+~~~~
+下一步把财报数字的获取从 gen-data 里拿出来，做成控制器的确定性代码，对应作业里「在适当环节用确定性代码完成计算」和「agent 不拿 Bash」。请这样做：
+
+1. 控制器新增子命令 fetch_sec（实现放 pypl/runtime/pypl/fetch.py，入口仍在 pypl/scripts/pypl.py），只用 Python 标准库 urllib。输入 as_of。访问 SEC XBRL 接口 https://data.sec.gov/api/xbrl/companyconcept/CIK0001633917/us-gaap/{概念}.json，概念先取 Revenues、NetIncomeLoss、EarningsPerShareDiluted 三个。要求：
+   - 只允许访问 data.sec.gov 和 www.sec.gov，别的域名直接拒绝；
+   - 带声明的 User-Agent，写项目名加联系邮箱，邮箱就用 AGENTS.md 里已经有的那个；
+   - 每次请求间隔不少于 1 秒，超时 30 秒，失败按 rules.md 重试 2 次并退避；
+   - 只取 form 是 10-Q 或 10-K、且 filed 日期不晚于 as_of 的最近一期，单季数据要用 start 到 end 大约三个月的那条；as-of 过滤必须在代码里做，不能靠提示词；
+   - 返回结构化 JSON：概念、数值、单位、期间起止、accession、filed 日期、来源 URL、获取时间；
+   - 取不到就返回 error，不要悄悄用录制数据。只有入参里显式带 allow_recorded 才允许退到 examples/input/ 的录制数据，并且返回里必须标 recorded=true。
+2. skills/start/SKILL.md 加一步：新建请求之后、派 generator 之前，Orchestrator 先调 fetch_sec，拿到的 JSON 作为 sec_facts，和持仓一起放进任务包，并用 persist_artifact 落盘留证据（schema.md 的 artifacts 里相应加一项 sec_facts）。
+3. gen-data：去掉 Bash，也不再自己取财报数字，直接用任务包里的 sec_facts。它只负责 Datasource 能取的东西：股价、新闻、8-K 条目、补充材料，按 data-sources.md 里实测过的 API 来。如果它整理的数字和 sec_facts 不一致，以 sec_facts 为准。同步改 role-cards.md 里 gen-data 的工具栏和 data-sources.md 里财报数字的首选来源。
+4. 报告固定结构里加一个 key_figures JSON 块（收入、净利润、稀释 EPS，带单位和期间），由 generator 写，方便机器核对。改 schema.md 的报告结构和 generator.md 的输出说明。
+5. gate_report 增加数值交叉核对：key_figures 里的收入、净利润、EPS 必须和 sec_facts 一致（单位换算后比较，四舍五入容差 0.5%），不一致就返回失败项 numeric_mismatch，并说明哪个数不一致。
+6. 测试：把上面三个概念的 SEC 返回结构（取最近几期，摘要即可）存成 pypl/tests/fixtures/sec_xbrl_sample.json，fetch 的网络部分要能注入假的 fetcher，默认测试不联网。新增用例：非白名单域名被拒绝；as_of 早于最近一期 filed 日期时返回上一期（演示防未来信息泄露）；数值一致通过；数值不一致被拦；取不到时不悄悄用录制数据。再做一个可选的联网自检 python3 pypl/scripts/check.py --live，默认不跑。check.py 全部通过再告诉我。
+
+写完把 check.py 的完整输出贴给我，再用 --live 真实跑一次 fetch_sec 把返回结果贴出来（as_of 用今天）。agent 其他部分和命令不要动。
+~~~~

@@ -2,13 +2,17 @@
 """运行所有控制器测试。
 
 用法：
-    python3 pypl/scripts/check.py
+    python3 pypl/scripts/check.py            # 离线测试，不联网
+    python3 pypl/scripts/check.py --live     # 离线测试 + 联网自检 fetch_sec
 """
 
+import datetime
 import importlib.util
 import inspect
+import json
 import os
 import shutil
+import subprocess
 import sys
 import tempfile
 import traceback
@@ -64,5 +68,36 @@ def main():
         sys.exit(1)
 
 
+def run_live_check():
+    """联网自检：真实调用一次 fetch_sec（as_of 取今天），结果只打印不计入退出码。"""
+    script = os.path.join(SCRIPT_DIR, "pypl.py")
+    today = datetime.date.today().isoformat()
+    payload = json.dumps({"as_of": today})
+    print(f"\n===== LIVE fetch_sec (as_of={today}) =====")
+    try:
+        proc = subprocess.run(
+            [sys.executable, script, "fetch_sec"],
+            input=payload,
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+    except subprocess.TimeoutExpired:
+        print("LIVE fetch_sec: FAIL（超时 120 秒）")
+        return
+    if proc.returncode != 0:
+        print(f"LIVE fetch_sec: FAIL（进程退出码 {proc.returncode}）")
+        print(proc.stderr)
+        return
+    print(proc.stdout.strip())
+    try:
+        res = json.loads(proc.stdout)
+        print(f"LIVE fetch_sec: {'PASS' if res.get('status') == 'ok' else 'FAIL'}")
+    except json.JSONDecodeError:
+        print("LIVE fetch_sec: FAIL（返回不是合法 JSON）")
+
+
 if __name__ == "__main__":
     main()
+    if "--live" in sys.argv:
+        run_live_check()

@@ -1,6 +1,6 @@
 # 数据来源与取法
 
-本文件约定 gen-data 专项允许使用的数据来源、具体取法、备选方案、失败处理和 as-of 规则。
+本文件约定财报核心数字的确定性取法（控制器 `fetch_sec`）以及 gen-data 专项允许使用的数据来源、具体取法、备选方案、失败处理和 as-of 规则。
 本章所有数据源名与 API 名均以 2026-11-15（本会话第 13 条）通过 `mcp__plugin-kimi-datasource_data__get_data_source_desc` / `call_data_source_tool` 实测返回为准，未实测验证过的一律不写入。
 
 ## 当前会话可用工具
@@ -38,12 +38,21 @@
 
 ### 1. 财报核心数字（收入、净利润、EPS、指引）
 
-**首选来源**：`kimi-datasource` 的 `sec_edgar` ★ 已实测
+**首选来源：控制器确定性代码，不经 agent、不用 Bash**（2026-11-15 新增，对应作业「在适当环节用确定性代码完成计算」）
+- 子命令 `fetch_sec`，实现 `pypl/runtime/pypl/fetch.py`，只用 Python 标准库 urllib。
+- 接口：`https://data.sec.gov/api/xbrl/companyconcept/CIK0001633917/us-gaap/{概念}.json`，概念为 `Revenues`、`NetIncomeLoss`、`EarningsPerShareDiluted`。
+- 安全与节奏：只访问白名单域名 data.sec.gov / www.sec.gov；User-Agent 声明项目名与联系邮箱（cynthiayu615@gmail.com）；相邻请求间隔 ≥1 秒；超时 30 秒；失败按 rules.md 重试 2 次、指数退避 2 秒/4 秒。
+- as-of 过滤在代码内完成：只选 form 为 10-Q/10-K 且 filed 不晚于 as_of 的条目；取 period end 最新一期；同一期末多条时优先取约三个月的单季数据。
+- 取不到返回 error，绝不悄悄用录制数据；仅入参显式 `allow_recorded=true` 才退到 `examples/input/pypl-earnings-q3-2026.json`，且返回标 `recorded=true`。
+- Orchestrator 在新建请求后、派 generator 前调用，结果作为 `sec_facts` 落盘（artifact 名 `sec_facts`）并放进任务包；`gate_report` 用它与报告中的 `key_figures` 交叉核对（容差 0.5%）。
+- gen-data 与各专项直接引用 `sec_facts`，不重复取数；不一致时以 `sec_facts` 为准。
+- as-of：财报 period end date；数据获取时间为当前时间。
+
+**核对备选**：`kimi-datasource` 的 `sec_edgar` ★ 已实测
 - `sec_edgar_get_financial_statements`：按 10-K/10-Q 取完整报表（ticker=PYPL）。
 - `sec_edgar_get_xbrl_facts`：按关键字取多年单指标时间序列（keyword 支持 revenue、netincome、eps 等）。
 - 原始页面：https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001633917
-- **降级**：`Bash` + `curl` 访问 `https://data.sec.gov/submissions/CIK0001633917.json` 拿申报列表，再解析 10-Q/10-K HTML；SEC 对未声明的自动化工具有拦截风险，需在 `User-Agent` 声明项目邮箱并控制频率。
-- as-of：财报 period end date；数据获取时间为当前时间。
+- **降级**：`FetchURL` 抓取 SEC 申报页；SEC 对未声明的自动化工具有拦截风险（需在请求头声明项目邮箱并控制频率）。
 
 ### 2. 财报发布日期 / 下一次财报日期
 

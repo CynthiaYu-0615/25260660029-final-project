@@ -36,6 +36,9 @@ def persist_artifact(payload):
     elif name == "evidence_bundle":
         filename = f"evidence-{request_id}-r{state['round']}.json"
         directory = EVIDENCE_DIR
+    elif name == "sec_facts":
+        filename = f"sec_facts-{request_id}-r{state['round']}.json"
+        directory = EVIDENCE_DIR
     else:
         raise ValueError(f"unknown artifact name: {name}")
 

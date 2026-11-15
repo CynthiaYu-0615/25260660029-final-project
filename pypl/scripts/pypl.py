@@ -29,6 +29,7 @@ from pypl.gate import gate_report
 from pypl.review import record_review
 from pypl.limits import check_limits
 from pypl.recover import recover
+from pypl.fetch import fetch_sec
 
 
 def _respond(status, data=None, error=None):
@@ -132,6 +133,11 @@ def cmd_check_limits(payload):
     _respond("ok", result)
 
 
+def cmd_fetch_sec(payload):
+    result = fetch_sec(payload)
+    _respond(result["status"], data=result.get("data"), error=result.get("error"))
+
+
 def cmd_recover(payload):
     try:
         result = recover(payload)
@@ -161,6 +167,7 @@ def main():
         "advance_phase": cmd_advance_phase,
         "write_final_state": cmd_write_final_state,
         "check_limits": cmd_check_limits,
+        "fetch_sec": cmd_fetch_sec,
         "recover": cmd_recover,
     }
 

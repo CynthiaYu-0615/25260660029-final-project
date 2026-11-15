@@ -1,5 +1,18 @@
+import json
 import re
 from datetime import datetime
+
+
+# key_figures 与 sec_facts 单位换算表（统一换算到基础单位后比较）
+_UNIT_FACTOR = {
+    "USD": 1.0,
+    "USD/share": 1.0,
+    "USD/shares": 1.0,
+    "USD per share": 1.0,
+    "million USD": 1_000_000.0,
+    "百万美元": 1_000_000.0,
+}
+_NUMERIC_TOLERANCE = 0.005  # 四舍五入容差 0.5%
 
 
 def _find_section(text, pattern):
@@ -15,6 +28,52 @@ def _count_reasons(text):
     # 粗略计算"理由"部分条目数，以"1."、"2." 或 "-" 开头
     reasons = re.findall(r"(?:^|\n)\s*(?:\d+\.|-)\s+(.{10,})", text)
     return len(reasons)
+
+
+def _extract_key_figures(report):
+    # 报告中必须包含一个含 key_figures 字段的 json 代码块
+    for m in re.finditer(r"```json\s*(.*?)```", report, re.DOTALL):
+        try:
+            obj = json.loads(m.group(1))
+        except Exception:
+            continue
+        if isinstance(obj, dict) and isinstance(obj.get("key_figures"), dict):
+            return obj["key_figures"]
+    return None
+
+
+def _to_base_value(entry):
+    """把 {value, unit} 换算成基础单位（USD / 每股 USD）。无法换算返回 None。"""
+    if not isinstance(entry, dict):
+        return None
+    factor = _UNIT_FACTOR.get(str(entry.get("unit", "")).strip())
+    if factor is None:
+        return None
+    try:
+        return float(entry["value"]) * factor
+    except (TypeError, ValueError):
+        return None
+
+
+def _numeric_failures(key_figures, facts):
+    failures = []
+    labels = (("收入", "revenues"), ("净利润", "net_income"), ("稀释EPS", "diluted_eps"))
+    for label, key in labels:
+        kf_entry = key_figures.get(key)
+        fact_entry = facts.get(key)
+        kf_base = _to_base_value(kf_entry)
+        fact_base = _to_base_value(fact_entry)
+        if kf_base is None:
+            failures.append(f"numeric_mismatch: {label}的 key_figures 数值或单位无法识别: {kf_entry}")
+            continue
+        if fact_base is None:
+            failures.append(f"numeric_mismatch: sec_facts 缺少可用的{label}: {fact_entry}")
+            continue
+        if abs(kf_base - fact_base) > _NUMERIC_TOLERANCE * max(abs(kf_base), abs(fact_base)):
+            failures.append(
+                f"numeric_mismatch: {label}不一致（key_figures={kf_entry} vs sec_facts={fact_entry}）"
+            )
+    return failures
 
 
 def gate_report(payload):
@@ -77,5 +136,22 @@ def gate_report(payload):
                     failures.append("证据包中存在缺少 as_of 的数据点")
         except Exception:
             pass
+
+    # 8. key_figures 与 sec_facts 数值交叉核对（提供 sec_facts 时启用）
+    sec_facts_raw = payload.get("sec_facts")
+    if sec_facts_raw:
+        if isinstance(sec_facts_raw, str):
+            try:
+                sec_facts_raw = json.loads(sec_facts_raw)
+            except Exception:
+                failures.append("numeric_mismatch: sec_facts 不是合法 JSON")
+                sec_facts_raw = None
+    if isinstance(sec_facts_raw, dict):
+        facts = sec_facts_raw.get("facts", {})
+        key_figures = _extract_key_figures(report)
+        if key_figures is None:
+            failures.append("缺少 key_figures JSON 块，无法与 sec_facts 做数值核对")
+        else:
+            failures.extend(_numeric_failures(key_figures, facts))
 
     return {"passed": len(failures) == 0, "failures": failures}

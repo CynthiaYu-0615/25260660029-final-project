@@ -35,6 +35,10 @@
     "evidence_bundle": {
       "path": ".pypl/evidence/evidence-001.json",
       "sha256": "..."
+    },
+    "sec_facts": {
+      "path": ".pypl/evidence/sec_facts-001-r0.json",
+      "sha256": "..."
     }
   },
   "issues": [
@@ -142,6 +146,21 @@
 4. **持仓含义**：结合 `.pypl/holdings.json` 说明
 5. **风险提示**：至少一条
 6. **数据来源与 as-of 清单**
+
+六部分之外，报告正文还必须包含一个 **key_figures JSON 代码块**（```json 围栏），供 `gate_report` 与 `sec_facts` 做机器核对。数值必须直接抄录任务包中的 `sec_facts`，不得改写或估算。结构如下：
+
+```json
+{
+  "key_figures": {
+    "revenues": {"value": 8584, "unit": "million USD", "period_start": "2026-07-01", "period_end": "2026-09-30"},
+    "net_income": {"value": 1073, "unit": "million USD", "period_start": "2026-07-01", "period_end": "2026-09-30"},
+    "diluted_eps": {"value": 1.25, "unit": "USD", "period_start": "2026-07-01", "period_end": "2026-09-30"}
+  }
+}
+```
+
+- `value` + `unit`：单位允许 `USD`、`million USD`、`USD/share` 等，`gate_report` 会自动换算后比较（容差 0.5%）。
+- 三个键 `revenues` / `net_income` / `diluted_eps` 必填。
 
 ## Critic Checklist（给 Critic 的检查卡）
 
