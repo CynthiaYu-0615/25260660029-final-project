@@ -1,0 +1,7 @@
+{
+  "scenario": "C 人工批准（approval）",
+  "sha_mismatch_refused": true,
+  "approve_final_state": "accepted",
+  "reject_final_state": "user_stopped",
+  "status": "ok"
+}

@@ -1,0 +1,11 @@
+{
+  "scenario": "A 核验拦截（blocked-then-pass）",
+  "gate_v1_blocked": true,
+  "v1_含买入指令被拦": true,
+  "v1_EPS错误numeric_mismatch": true,
+  "gate_v2_passed": true,
+  "v2_revise": true,
+  "gate_v3_passed": true,
+  "final_next_action": "await_approval",
+  "status": "ok"
+}

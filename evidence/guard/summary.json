@@ -1,0 +1,44 @@
+{
+  "scenario": "F hook 拦截（guard）",
+  "blocked_count": 4,
+  "allowed_count": 2,
+  "results": [
+    {
+      "label": "blocked-write-state",
+      "exit_code": 2,
+      "stderr": "状态文件只能由控制器脚本写入",
+      "verdict": "blocked"
+    },
+    {
+      "label": "blocked-dotdot",
+      "exit_code": 2,
+      "stderr": "状态文件只能由控制器脚本写入",
+      "verdict": "blocked"
+    },
+    {
+      "label": "blocked-bash-redirect",
+      "exit_code": 2,
+      "stderr": "状态文件只能由控制器脚本写入",
+      "verdict": "blocked"
+    },
+    {
+      "label": "blocked-alpaca-orders",
+      "exit_code": 2,
+      "stderr": "本系统只做研究，不执行交易",
+      "verdict": "blocked"
+    },
+    {
+      "label": "allowed-sec",
+      "exit_code": 0,
+      "stderr": "",
+      "verdict": "allowed"
+    },
+    {
+      "label": "allowed-git",
+      "exit_code": 0,
+      "stderr": "",
+      "verdict": "allowed"
+    }
+  ],
+  "status": "ok"
+}

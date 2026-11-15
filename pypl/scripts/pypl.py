@@ -30,6 +30,7 @@ from pypl.review import record_review
 from pypl.limits import check_limits
 from pypl.recover import recover
 from pypl.fetch import fetch_sec
+from pypl.approval import record_approval
 
 
 def _respond(status, data=None, error=None):
@@ -138,6 +139,14 @@ def cmd_fetch_sec(payload):
     _respond(result["status"], data=result.get("data"), error=result.get("error"))
 
 
+def cmd_record_approval(payload):
+    try:
+        result = record_approval(payload)
+        _respond("ok", result)
+    except ValueError as e:
+        _respond("error", error=str(e))
+
+
 def cmd_recover(payload):
     try:
         result = recover(payload)
@@ -168,6 +177,7 @@ def main():
         "write_final_state": cmd_write_final_state,
         "check_limits": cmd_check_limits,
         "fetch_sec": cmd_fetch_sec,
+        "record_approval": cmd_record_approval,
         "recover": cmd_recover,
     }
 

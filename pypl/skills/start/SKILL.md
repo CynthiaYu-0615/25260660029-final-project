@@ -132,8 +132,15 @@ EOF
   - `revise`：生成修复任务包，调用 `advance_phase` 进入 `revising`，返回步骤 3。
   - `review_again`：调用 `advance_phase` 进入 `reviewing`，返回步骤 6，再次调用 Critic。
   - `await_approval`：调用 `AskUserQuestion` 询问是否批准归档。
-    - 用户批准：调用 `write_final_state --final-state accepted`。
-    - 用户拒绝：调用 `write_final_state --final-state user_stopped`。
+    - 用户批准：调用 `record_approval`，`decision=approve`，`sha256` 用当前候选报告的 sha256。
+    - 用户拒绝：调用 `record_approval`，`decision=reject`。
+    - `record_approval` 会先核对 sha256 与当前候选报告一致；不一致或请求已处终态时会拒绝（`approved=false`），Orchestrator 把原因告知用户，不进入归档。批准记录写入 `.pypl/approvals.json`。
+
+```bash
+python3 "$CONTROLLER" record_approval << 'EOF'
+{ "request_id": "...", "decision": "approve", "approver": "于欣荷", "sha256": "..." }
+EOF
+```
   - `final`：调用 `write_final_state` 写入 `final_state` 和 `final_reason`。
 
 ### 9. 检查运行限制

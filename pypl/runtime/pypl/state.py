@@ -8,6 +8,7 @@ from .config import (
     HOLDINGS_FILE,
     EVENTS_FILE,
     ISSUES_FILE,
+    APPROVALS_FILE,
     REPORTS_DIR,
     EVIDENCE_DIR,
 )
@@ -33,6 +34,7 @@ def init_workspace(payload):
     _write_json(os.path.join(workspace, HOLDINGS_FILE), {"positions": []})
     _write_json(os.path.join(workspace, EVENTS_FILE), {"events": []})
     _write_json(os.path.join(workspace, ISSUES_FILE), {"issues": []})
+    _write_json(os.path.join(workspace, APPROVALS_FILE), {"approvals": []})
 
     return {"pypl_dir": pypl, "state_file": os.path.join(workspace, STATE_FILE)}
 

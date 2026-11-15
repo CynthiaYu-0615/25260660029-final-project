@@ -1,0 +1,12 @@
+{
+  "scenario": "B 修订上限（exhausted）",
+  "next_actions": [
+    "revise",
+    "revise",
+    "final"
+  ],
+  "final_state": "exhausted",
+  "exhausted_not_accepted": true,
+  "overwrite_attempt_refused": true,
+  "status": "ok"
+}

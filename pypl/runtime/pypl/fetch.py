@@ -201,7 +201,9 @@ def fetch_sec(payload, fetcher=None, sleeper=None, clock=None):
 
     入参（payload）：
     - as_of：信息截止时点（YYYY-MM-DD 或 ISO 8601），必填；
-    - allow_recorded：显式为 true 时，取数失败才允许退到录制数据。
+    - allow_recorded：显式为 true 时，取数失败才允许退到录制数据；
+    - prefer_recorded：显式为 true 时，若录制数据存在则直接使用，
+      不发网络请求（供 demo/测试离线使用；返回同样标 recorded=true）。
 
     依赖注入（测试用，默认真实实现）：
     - fetcher(url, timeout=...) -> dict：返回 SEC XBRL JSON；
@@ -220,6 +222,10 @@ def fetch_sec(payload, fetcher=None, sleeper=None, clock=None):
     except ValueError:
         return {"status": "error", "error": f"as_of 格式不正确: {as_of_raw}"}
     allow_recorded = payload.get("allow_recorded") is True
+    if payload.get("prefer_recorded") is True:
+        recorded = _load_recorded()
+        if recorded is not None:
+            return {"status": "ok", "data": recorded}
 
     limiter = _RateLimiter(MIN_INTERVAL_SECONDS, sleeper, clock)
 

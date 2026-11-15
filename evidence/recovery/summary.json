@@ -1,0 +1,20 @@
+{
+  "scenario": "D 中断恢复（recovery）",
+  "killed_after": "persist_artifact 完成后、record_review 之前",
+  "completed_steps": [
+    "preparing",
+    "generating"
+  ],
+  "next_steps_after_recover": [
+    "reviewing",
+    "revising",
+    "archiving",
+    "final"
+  ],
+  "跳过已完成步骤": true,
+  "persist_count_before": 3,
+  "persist_count_after": 3,
+  "persist_count_unchanged": true,
+  "final_next_action": "await_approval",
+  "status": "ok"
+}

@@ -40,6 +40,7 @@ EOF
 | `gate_report` | 候选报告送 Critic 前的确定性检查。 |
 | `record_issues` | 记录 Critic 返回的问题项。 |
 | `record_review` | 根据 Critic 结论更新状态，返回下一步动作。 |
+| `record_approval` | 人工批准/拒绝归档：核对候选 sha256，写 `.pypl/approvals.json` 和终态。 |
 | `advance_phase` | 推进状态机阶段。 |
 | `write_final_state` | 写入终态和原因（幂等，终态不可覆盖）。 |
 | `check_limits` | 检查工具调用次数和运行时长是否超限。 |
@@ -385,6 +386,41 @@ EOF
   }
 }
 ```
+
+## record_approval
+
+**输入**：
+
+```json
+{
+  "request_id": "req-20261115-001",
+  "decision": "approve|reject",
+  "approver": "于欣荷",
+  "sha256": "当前候选报告的 sha256"
+}
+```
+
+**行为**：
+
+- 核对入参 `sha256` 与 `.pypl/state.json` 中当前 `candidate_report` 的 sha256：不一致则**拒绝批准**，往 `.pypl/approvals.json` 追加一条 `result=refused` 记录（含原因），不写终态。
+- 已处于终态时同样拒绝并记录。
+- 核对通过：`decision=approve` 写入终态 `accepted`（原因「用户 X 批准归档」）；`decision=reject` 写入终态 `user_stopped`。每条决定都追加到 `.pypl/approvals.json`。
+
+**输出**：
+
+```json
+{
+  "status": "ok",
+  "data": {
+    "approved": true,
+    "approval_id": "apv-001",
+    "final_state": "accepted",
+    "final_reason": "用户 于欣荷 批准归档"
+  }
+}
+```
+
+被拒绝时 `approved=false`，`reason` 说明原因，无 `final_state`。
 
 ## advance_phase
 

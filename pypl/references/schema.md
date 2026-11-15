@@ -113,6 +113,29 @@
 - 由 `/pypl:event` 登记财报日期后自动生成。
 - `status` 用于避免重复触发。
 
+## approvals.json（人工批准记录）
+
+`.pypl/approvals.json`，追加式日志，只由控制器 `record_approval` 写入：
+
+```json
+{
+  "approvals": [
+    {
+      "approval_id": "apv-001",
+      "request_id": "req-20261115-001",
+      "decision": "approve|reject",
+      "approver": "于欣荷",
+      "sha256": "当前候选报告的 sha256",
+      "result": "approved|rejected|refused",
+      "reason": "refused 时的原因",
+      "recorded_at": "2026-11-15T12:00:00+00:00"
+    }
+  ]
+}
+```
+
+- `result=approved` 对应终态 `accepted`，`rejected` 对应 `user_stopped`，`refused` 表示 sha256 不一致或已处终态、未写终态。
+
 ## Issue（问题项）
 
 ```json

@@ -1,0 +1,7 @@
+{
+  "scenario": "E 限制触发（limits）",
+  "blocked": true,
+  "stalled": true,
+  "ok_control": true,
+  "status": "ok"
+}

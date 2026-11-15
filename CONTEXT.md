@@ -265,3 +265,22 @@ rules.md：限制和规则，数字直接定下来——最大修订轮数 3、�
 
 写完把 check.py 的完整输出贴给我。agent、命令、skill 这一步不要动。
 ~~~~
+
+## 第 16 条 · 2026-11-15 21:29:00
+~~~~
+接下来做作业要求的「核验与恢复的证据」。真实的 LLM 运行不稳定也慢，所以先写一个不依赖 LLM 的演示脚本 pypl/scripts/demo.py（只用标准库），用「假 agent 返回值」去驱动真实的控制器，把 Orchestrator 的流程跑出真实的状态文件和日志。每个场景在临时工作目录里运行，结束后由 demo.py 自己用 Python 把状态快照和日志拷到 evidence/ 对应子目录（不要用 Bash 的 cp，我们的 hook 会拦住涉及 .pypl/ 的 cp），日志每行带时间戳、request_id 和当前 git 提交号。
+
+场景：
+A. 核验拦截（evidence/verification/blocked-then-pass/）：候选报告 v1 里有「建议买入」并且 key_figures 的 EPS 写错，gate_report 把它拦在送审前；v2 通过关卡，但假 Critic 返回一个 major 问题，record_review 给出 revise；v3 修好后连续两轮通过，进入 await_approval。每一步的输入输出 JSON 都记进日志。
+B. 修订上限（evidence/verification/exhausted/）：假 Critic 每轮都不通过，3 轮之后终态是 exhausted，不是 accepted；再尝试覆盖终态要被拒绝，日志里留下被拒绝的记录。
+C. 人工批准（evidence/approval/）：给控制器新增子命令 record_approval（入参：request_id、decision approve 或 reject、approver、候选报告的 sha256），把批准记录写进 .pypl/approvals.json，approve 之后写终态 accepted，reject 写 user_stopped；批准时要核对 sha256 和当前候选报告一致，不一致就拒绝。演示里两种都跑一次。同步更新 controller.md、schema.md 和 skills/start/SKILL.md 里 AskUserQuestion 之后调用它的步骤。
+D. 中断恢复（evidence/recovery/）：用 subprocess 起一个演示进程，在 persist_artifact 完成之后、record_review 之前把它 kill 掉；然后重启，调用 recover，只执行没做完的步骤。日志里要能看到「跳过已完成步骤」，以及 persist_artifact 的调用计数在恢复前后没有增加。
+E. 限制触发（evidence/limits/）：工具调用超过 60 次返回 blocked；用注入的时钟模拟超过 20 分钟返回 stalled。
+F. hook 拦截（evidence/guard/）：把几条典型的 hook 输入（写 .pypl/state.json、用 .. 绕路写、Bash 重定向写 .pypl、访问 alpaca 下单接口）直接喂给 pypl/hooks/pre_tool_use.py，保存它产生的 guard-log.jsonl 和每条的退出码、拦截原因，再附两条放行的对照。
+
+evidence/README.md：每个子目录是什么证据、一条命令怎么复现（python3 pypl/scripts/demo.py --scenario A 之类，也支持 --all），并且在开头写明：这些是演示脚本用假 agent 驱动真实控制器和真实 hook 得到的证据，真实 LLM 端到端运行的证据放在 evidence/live/，两者区分开。给 check.py 加一组测试，断言每个场景的终态符合预期。
+
+最后一件事，同步 pypl/commands/ 五个文件：调用控制器的写法改成和 skills/start/SKILL.md 一致（stdin JSON，脚本路径固定为 ${KIMI_CODE_HOME:-$HOME/.kimi-code}/plugins/managed/pypl/scripts/pypl.py），去掉旧的 --action 之类命令行参数写法；$ARGUMENTS 为空或缺字段时，用 AskUserQuestion 向我补问，不要只是回一句请按格式输入；event 命令里把 CronCreate 的步骤写清楚（由 Orchestrator 调用，不是脚本）。
+
+全部通过后把 demo.py --all 的输出和 check.py 的完整输出贴给我。agent 其他部分和 skill 这一步不要动。
+~~~~
