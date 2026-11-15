@@ -15,3 +15,23 @@ PYPL 插件的版本记录。每次采纳（adopted）、拒绝（rejected）、
 - 改动：违禁词增加：加仓、抄底、清仓（v0.1-baseline → v0.2）
 - 指标：召回率 0.70 → 1.00，误拦率 0.00 → 0.00
 - 决定：采纳（批准人 于欣荷，候选 sha256 8711905c0b94…，记录于 evals/approvals.json）
+
+## v0.3 — rejected
+
+- 日期：2026-11-15
+- 决定：拒绝（未写入门户规则）
+- 理由：数值容差放宽到 5% 导致 case-04（EPS 偏差 1.6%）漏放，召回率 1.00→0.90，违反 min_recall_gain；误拦率虽未升但不足以采纳
+
+## v0.1-baseline — rollback（自 v0.1-baseline 恢复）
+
+- 日期：2026-11-15
+- 改动：gate_rules.json 恢复到 v0.1-baseline 对应内容（版本 v0.1-baseline）
+- 指标：召回率 0.70，误拦率 0.00，fingerprint 477a7d40fab3…
+- 决定：回滚（由演示/用户发起）
+
+## v0.2 — rollback（自 v0.2 恢复）
+
+- 日期：2026-11-15
+- 改动：gate_rules.json 恢复到 v0.2 对应内容（版本 v0.2）
+- 指标：召回率 1.00，误拦率 0.00，fingerprint 3b3bd951035a…
+- 决定：回滚（由演示/用户发起）

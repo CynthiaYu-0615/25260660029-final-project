@@ -1,0 +1,6 @@
+{
+  "version": "v0.3",
+  "forbidden_words": ["买入", "卖出", "下单", "加仓", "清仓", "抄底"],
+  "numeric_tolerance": 0.05,
+  "min_reasons": 3
+}

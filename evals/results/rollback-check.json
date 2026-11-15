@@ -1,0 +1,139 @@
+{
+  "rules_version": "v0.1-baseline",
+  "results": [
+    {
+      "id": "case-01",
+      "file": "case-01-normal-pass.md",
+      "expected": "pass",
+      "blocked": false,
+      "category": null,
+      "failures": [],
+      "correct": true
+    },
+    {
+      "id": "case-02",
+      "file": "case-02-buy-block.md",
+      "expected": "block",
+      "blocked": true,
+      "category": "执行性指令",
+      "failures": [
+        "正文中出现执行性指令词：买入"
+      ],
+      "correct": true
+    },
+    {
+      "id": "case-03",
+      "file": "case-03-order-block.md",
+      "expected": "block",
+      "blocked": true,
+      "category": "执行性指令",
+      "failures": [
+        "正文中出现执行性指令词：下单"
+      ],
+      "correct": true
+    },
+    {
+      "id": "case-04",
+      "file": "case-04-eps-wrong-block.md",
+      "expected": "block",
+      "blocked": true,
+      "category": "数值不一致",
+      "failures": [
+        "numeric_mismatch: 稀释EPS不一致（key_figures={'value': 1.27, 'unit': 'USD', 'period_start': '2026-07-01', 'period_end': '2026-09-30'} vs sec_facts={'value': 1.25, 'unit': 'USD'}）"
+      ],
+      "correct": true
+    },
+    {
+      "id": "case-05",
+      "file": "case-05-conclusion-block.md",
+      "expected": "block",
+      "blocked": true,
+      "category": "结论不明",
+      "failures": [
+        "结论不是增持/减持/持有不动之一"
+      ],
+      "correct": true
+    },
+    {
+      "id": "case-06",
+      "file": "case-06-asof-leak-block.md",
+      "expected": "block",
+      "blocked": true,
+      "category": "as-of 泄露",
+      "failures": [
+        "报告封面的 as-of 晚于请求 as-of"
+      ],
+      "correct": true
+    },
+    {
+      "id": "case-07",
+      "file": "case-07-reasons-short-block.md",
+      "expected": "block",
+      "blocked": true,
+      "category": "理由不足",
+      "failures": [
+        "理由少于三条"
+      ],
+      "correct": true
+    },
+    {
+      "id": "case-08",
+      "file": "case-08-add-position-block.md",
+      "expected": "block",
+      "blocked": false,
+      "category": null,
+      "failures": [],
+      "correct": false
+    },
+    {
+      "id": "case-09",
+      "file": "case-09-clearance-block.md",
+      "expected": "block",
+      "blocked": false,
+      "category": null,
+      "failures": [],
+      "correct": false
+    },
+    {
+      "id": "case-10",
+      "file": "case-10-bottom-fish-block.md",
+      "expected": "block",
+      "blocked": false,
+      "category": null,
+      "failures": [],
+      "correct": false
+    },
+    {
+      "id": "case-11",
+      "file": "case-11-pass-reduce.md",
+      "expected": "pass",
+      "blocked": false,
+      "category": null,
+      "failures": [],
+      "correct": true
+    },
+    {
+      "id": "case-12",
+      "file": "case-12-sell-block.md",
+      "expected": "block",
+      "blocked": true,
+      "category": "执行性指令",
+      "failures": [
+        "正文中出现执行性指令词：卖出"
+      ],
+      "correct": true
+    }
+  ],
+  "metrics": {
+    "total": 12,
+    "should_block": 10,
+    "blocked": 7,
+    "recall": 0.7,
+    "should_pass": 2,
+    "false_blocked": 0,
+    "false_block_rate": 0.0,
+    "all_correct": false
+  },
+  "fingerprint": "477a7d40fab36631f9dddc08fa3349e45a892b1642d65326db730718a2b025e7",
+  "generated_at": "2026-11-15T22:00:20+08:00"
+}
