@@ -1,29 +1,20 @@
 {
-  "source_url": "https://data.sec.gov/submissions/CIK0001633917.json",
-  "source_type": "SEC EDGAR Submissions API",
-  "retrieved_at": "2026-11-15T18:20:00+08:00",
+  "source_url": "https://www.sec.gov/Archives/edgar/data/1633917/0001633917-26-000086-index.html",
+  "source_type": "SEC EDGAR（经 kimi-datasource 插件 sec_edgar 数据源 API：sec_edgar_get_filings + sec_edgar_get_company_events）",
+  "retrieved_at": "2026-11-15T18:43:26+08:00",
   "as_of": "2026-11-15",
   "filings": [
     {
-      "date": "2026-10-30",
-      "form": "4",
-      "description": "Insider transaction"
-    },
-    {
-      "date": "2026-10-27",
-      "form": "10-Q",
-      "description": "Q3 2026 quarterly report"
-    },
-    {
       "date": "2026-10-27",
       "form": "8-K",
-      "description": "Current report"
-    },
-    {
-      "date": "2026-10-16",
-      "form": "4",
-      "description": "Insider transaction"
+      "accession": "0001633917-26-000086",
+      "items": [
+        "2.02 Results of Operations and Financial Condition（经营成果与财务状况）",
+        "9.01 Financial Statements and Exhibits（财务报表及附件）"
+      ],
+      "description": "Q3 2026 业绩发布相关 8-K",
+      "url": "https://www.sec.gov/Archives/edgar/data/1633917/0001633917-26-000086-index.html"
     }
   ],
-  "notes": "SEC API 返回了最近申报列表；8-K 标题因 SEC HTML 访问限制未完整获取。"
+  "notes": "SEC 的 8-K 申报没有正式标题字段，最接近的即为 Item 编号及事项描述，取 2026-09-01 以来最近一份 8-K（2026-10-27，对应 Q3 2026 财报发布）。再早一份 8-K 为 2026-07-28（Q2 业绩）。实测调用 2 次：sec_edgar_get_filings、sec_edgar_get_company_events，均成功。"
 }

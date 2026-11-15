@@ -1,45 +1,58 @@
 {
-  "source_url": "https://stockanalysis.com/stocks/pypl",
-  "source_type": "stockanalysis.com 新闻聚合区",
-  "retrieved_at": "2026-11-15T18:30:00+08:00",
+  "source_url": "https://www.zhitongcaijing.com/content/detail/1513500.html",
+  "source_type": "东方财富妙想金融资讯搜索 dongcai_mx_finance_search（kimi-datasource 插件 dongcai 数据源）",
+  "retrieved_at": "2026-11-15T18:43:26+08:00",
   "as_of": "2026-11-15",
   "items": [
     {
-      "title": "PayPal Holdings Transcript: KBW Fintech Ecosystem Conference 2026",
-      "date": "4 days ago",
-      "source": "Transcripts",
+      "title": "伯恩斯坦上调PayPal目标价（55美元→60美元）",
+      "date": "2026-11-11",
+      "source": "财联社",
+      "url": null,
       "is_major": false
     },
     {
-      "title": "Venmo Adds Receipt Scanning to Simplify Bill Splitting",
-      "date": "5 days ago",
-      "source": "PYMNTS",
+      "title": "21专访丨贝宝支付副总经理刘致勇：在华深耕二十余年，继续寻找新机遇",
+      "date": "2026-11-06",
+      "source": "21世纪经济报道",
+      "url": null,
       "is_major": false
     },
     {
-      "title": "PayPal’s (PYPL) Turnaround Still Needs Proof",
-      "date": "5 days ago",
-      "source": "TipRanks",
+      "title": "瑞穗银行将PayPal目标价从51美元上调至55美元",
+      "date": "2026-10-28",
+      "source": "财联社",
+      "url": null,
       "is_major": false
     },
     {
-      "title": "Tuesday's First Moves: SOFI & RCL Rally After Earnings, PYPL Beats",
-      "date": "18 days ago",
-      "source": "Schwab Network",
+      "title": "摩根士丹利将PayPal目标价从45美元上调至46美元",
+      "date": "2026-10-28",
+      "source": "财联社",
+      "url": null,
       "is_major": false
     },
     {
-      "title": "PayPal Holdings Earnings Call Transcript: Q3 2026",
-      "date": "18 days ago",
-      "source": "Transcripts",
+      "title": "花旗将PayPal目标价从61美元下调至58美元",
+      "date": "2026-10-28",
+      "source": "财联社",
+      "url": null,
       "is_major": false
     },
     {
-      "title": "PayPal Holdings Slides: Q3 2026",
-      "date": "18 days ago",
-      "source": "Filings",
+      "title": "PayPal(PYPL.US)Q3营收逊预期 上调全年利润指引",
+      "date": "2026-10-27",
+      "source": "智通财经网",
+      "url": "https://www.zhitongcaijing.com/content/detail/1513500.html",
+      "is_major": false
+    },
+    {
+      "title": "当中国企业出海进入“品牌周期”，PayPal选择做“价值的桥梁”",
+      "date": "2026-10-26",
+      "source": "《商学院》杂志",
+      "url": "http://www.bmronline.com.cn/index.php?m=content&c=index&a=show&catid=24&id=15386",
       "is_major": false
     }
   ],
-  "notes": "当前 30 天内未出现裁员、收购并购、拆分、CXO 变动等重大事件。"
+  "notes": "最近 30 天（2026-10-16 至 2026-11-15）窗口内未见裁员、收购并购、拆分、CXO 变动等重大事件条目。财联社快讯条目未提供原文 URL。实测：yahoo_finance get_yahoo_finance_news 失败（Yahoo 接口宕机报错）；xhcj search_prodinfo 调用成功但返回条目均为 2026-02 至 2026-07 的旧闻，不在 30 天窗口内；最终由 dongcai_mx_finance_search 取得上述条目。"
 }

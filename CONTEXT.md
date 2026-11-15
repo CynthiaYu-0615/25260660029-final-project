@@ -210,3 +210,20 @@ rules.md：限制和规则，数字直接定下来——最大修订轮数 3、�
 
 写完自己跑一遍 check.py，把输出贴给我。agent 和命令这一步不要动，只改 skill 里调用控制器的那几处。
 ~~~~
+
+## 第 12 条 · 2026-11-15 18:30:19
+~~~~
+已经reload了，还是没有么
+~~~~
+## 第 13 条 · 2026-11-15 18:38:14
+~~~~
+这是一个新会话。上一轮取数时 Datasource 的 MCP 工具没法调用，现在补做。
+
+1. 先确认你现在能用的取数相关工具有哪些，看看 mcp__plugin-kimi-datasource_data__get_data_source_desc 和 mcp__plugin-kimi-datasource_data__call_data_source_tool 在不在。如果不在，直接告诉我，不要用别的办法绕。
+2. 在的话，先调 get_data_source_desc 看 Datasource 到底有哪些数据源、每个数据源有哪些工具、入参是什么。把它真实返回的数据源名和工具名列给我。
+3. 然后用 Datasource 补取 PYPL 的这几项：当前股价和最近 30 天涨跌；最近 30 天新闻（带日期和来源）；下一次财报日期；最近一份 8-K 的标题。总共不超过 15 次调用，失败了如实记录，不要编。
+4. pypl/references/data-sources.md 里之前写的 Datasource 数据源名（sec_edgar、stock_finance_data、yahoo_finance、xhcj、cls 这些）是没实测就写的，按第 2 步真实返回的内容更正，没验证过的一律删掉，不要保留猜的。把第 3 步实测的结果、成功与否、调用次数写进去，并更新 examples/input/ 里对应的样例（只留摘要、数字、来源 URL 和获取时间）。
+5. 把 pypl/agents/gen-data.md 的 tools 里的 mcp 工具名按真实情况核对一遍。Bash 这一步先不动，我下一步单独处理。
+
+做完告诉我：Datasource 实际有哪些数据源、第 3 步每项拿到没有、调用了几次。其他文件不要动。
+~~~~

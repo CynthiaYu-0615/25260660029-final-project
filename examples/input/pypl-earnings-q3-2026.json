@@ -27,5 +27,18 @@
     "value": 3290,
     "unit": "million USD"
   },
-  "notes": "数据从 SEC 10-Q HTML 中解析得到。指引/Outlook 部分因 HTML 结构复杂未完整提取。"
+  "next_earnings_date": {
+    "status": "not_available",
+    "value": null,
+    "historical_release_dates": [
+      "2026-02-03（2025 年报）",
+      "2026-05-05（2026 一季报）",
+      "2026-07-28（2026 中报）",
+      "2026-10-27（2026 三季报）"
+    ],
+    "inferred_estimate": "约 2027-02-02（按往年 Q4/全年报在 2 月初的节奏推断，非官方日期）",
+    "source_url": "https://finance.yahoo.com/quote/PYPL",
+    "retrieved_at": "2026-11-15T18:43:26+08:00"
+  },
+  "notes": "Q3 2026 财报数字从 SEC 10-Q HTML 中解析得到（2026-11-15 早些时候录制）。下一次财报日期未能从数据源取得官方值：yahoo_finance get_stock_info 的 earningsTimestamp 字段指向已过去的 2026-10-27（上一次财报）；dongcai_mx_finance_data 两次查询只返回历史披露日期表。报告引用时必须区分「实测」与「推断」。"
 }

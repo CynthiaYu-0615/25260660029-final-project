@@ -1,0 +1,19 @@
+{
+  "source_url": "https://finance.yahoo.com/quote/PYPL",
+  "source_type": "Yahoo Finance（经 kimi-datasource 插件 yahoo_finance 数据源 API 获取）",
+  "retrieved_at": "2026-11-15T18:43:26+08:00",
+  "as_of": "2026-11-13",
+  "current_price": {
+    "value": 59.28,
+    "currency": "USD",
+    "latest_trading_day": "2026-11-13",
+    "note": "2026-11-13 收盘价；前一交易日（2026-11-12）收盘 58.30"
+  },
+  "change_30d": {
+    "basis": "2026-10-14 收盘 56.10 → 2026-11-13 收盘 59.28",
+    "value": 3.18,
+    "currency": "USD",
+    "percent": 5.67
+  },
+  "notes": "实测获取成功。调用 yahoo_finance get_stock_info 与 get_historical_stock_prices（period=3mo）各一次。"
+}
