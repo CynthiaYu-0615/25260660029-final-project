@@ -2,23 +2,7 @@
   "name": "pypl",
   "version": "0.1.0",
   "description": "PayPal (PYPL) 持续研究插件，用于长程智能体工作流演示。",
-  "commands": [
-    "commands/start.md",
-    "commands/trade.md",
-    "commands/evo.md"
-  ],
-  "skills": [
-    "skills/start/SKILL.md",
-    "skills/evo/SKILL.md"
-  ],
-  "agents": [
-    "agents/orchestrator.md",
-    "agents/generator.md",
-    "agents/critic.md",
-    "agents/researcher.md",
-    "agents/analyst.md",
-    "agents/writer.md",
-    "agents/reviewer.md",
-    "agents/verifier.md"
-  ]
+  "commands": "./commands/",
+  "skills": "./skills/",
+  "agents": "./agents/"
 }

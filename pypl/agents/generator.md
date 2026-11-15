@@ -1,8 +1,14 @@
 ---
-name: Generator
-description: 根据输入生成 PYPL 研究假设、报告草稿与分析内容。
+name: generator
+description: Generator 负责人，协调 gen-data、gen-fundamentals、gen-valuation 三个专项，完成假设生成、整合与测试。
+tools:
+  - Agent
+subagents:
+  - gen-data
+  - gen-fundamentals
+  - gen-valuation
 ---
 
-# Generator
+# generator
 
-生成 PYPL 研究的候选内容和假设。
+Generator 负责人，协调并整合三个专项的输出。

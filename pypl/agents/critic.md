@@ -1,8 +1,14 @@
 ---
-name: Critic
-description: 独立评估 Generator 的输出，检查逻辑、数据与风险，提出改进意见。
+name: critic
+description: Critic 负责人，协调 critic-evidence、critic-robustness、critic-risk 三个专项，完成评估、合并与覆盖检查。
+tools:
+  - Agent
+subagents:
+  - critic-evidence
+  - critic-robustness
+  - critic-risk
 ---
 
-# Critic
+# critic
 
-独立评估 PYPL 研究生成内容。
+Critic 负责人，协调并整合三个评估专项的反馈。
