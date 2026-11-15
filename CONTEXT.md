@@ -191,3 +191,22 @@ rules.md：限制和规则，数字直接定下来——最大修订轮数 3、�
 脚本代码这一步还不写。写完告诉我改了哪些文件。
 ~~~~
 
+
+## 第 11 条 · 2026-11-15 18:19:01
+~~~~
+现在写控制器的代码和测试。先把契约里几处不合理的地方改了，然后实现，只用 Python 标准库，不要装任何依赖。
+
+契约调整（同步改 references/controller.md 和 skills/start/SKILL.md）：
+1. 所有子命令统一从 stdin 读一个 JSON，把结果 JSON 打到 stdout，不用命令行参数传内容（报告全文含引号和换行）。调用方式写成 python3 <脚本绝对路径> <子命令> 配 heredoc 传 JSON。
+2. 脚本绝对路径固定写 ${KIMI_CODE_HOME:-$HOME/.kimi-code}/plugins/managed/pypl/scripts/pypl.py，不要再用 skill 目录推导。.pypl/ 放在运行时的工作目录下。
+3. record_event 不要碰 Cron。脚本只写 events.json，并把两个提醒该触发的日期时间返回给 Orchestrator，由 Orchestrator 自己调用 CronCreate。
+4. 新增 record_review：Orchestrator 把 Critic 这一轮的结论和问题项交给它，由脚本更新 consecutive_passes、round，并返回 next_action，取值只有：revise（带修复任务包）、review_again（同一候选再审一轮）、await_approval（连续两轮通过，等我批准）、final（带终态和原因，比如 exhausted）。候选报告哈希变了就把 consecutive_passes 清零。修订轮数、终态规则全部按 references/rules.md。skill 里改成「照 next_action 走」，Orchestrator 不自己算轮数。
+5. 新增 gate_report：候选报告送 Critic 之前先过一道确定性检查，返回通过与否和失败项，至少检查：六个部分齐全；结论是增持、减持、持有不动三选一；理由不少于三条；有风险提示；正文里没有买入、卖出、下单这类执行性指令词；封面的 as-of 不晚于请求的 as-of；证据包里每条来源都有 URL 和获取时间，且获取时间不晚于 as-of。
+6. 新增 check_limits：传入已用工具调用次数和开始时间，超 60 次返回 blocked，超 20 分钟返回 stalled。
+
+实现放在：pypl/scripts/pypl.py（只做入口和分发）、pypl/runtime/pypl/ 下按职责拆几个模块（状态机、产物与哈希、关卡检查等，已有的 state_machine.py 和 levels.py 你读着合并或改名）。要求幂等：同一个 request_id 重复落盘相同内容不重复写；终态写入后不可被覆盖；recover 只返回未完成的步骤。
+
+测试放 pypl/tests/，用 test_data.json 或新增 fixtures 做测试数据，pypl/scripts/check.py 一条命令跑完所有测试，打印每条用例 PASS 或 FAIL，失败退出码非零。至少覆盖：落盘幂等；哈希被篡改后 verify_hash 失败；候选报告改动后连续通过清零；连续两轮通过才 await_approval；达到 3 轮仍未通过是 exhausted 而不是 accepted；终态不能被覆盖；recover 不重复已完成步骤；gate_report 对「含买入指令」「as-of 泄露」「结论不是三选一」各拦住一次；check_limits 两种超限。
+
+写完自己跑一遍 check.py，把输出贴给我。agent 和命令这一步不要动，只改 skill 里调用控制器的那几处。
+~~~~
