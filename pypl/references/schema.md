@@ -7,7 +7,7 @@
 ```json
 {
   "request_id": "req-20261115-001",
-  "trigger": "earnings_pre|earnings_post|news|trade|manual|evo",
+  "trigger": "earnings_pre|earnings_post|news|trade|manual",
   "as_of": "2026-11-15T09:00:00+08:00",
   "created_at": "2026-11-15T09:00:00+08:00"
 }
@@ -147,10 +147,10 @@
 
 Critic 使用以下检查卡逐项评估，返回问题项：
 
-1. 结论是否明确为三者之一？
-2. 理由是否至少三条并标注来源和 as-of？
-3. 持仓含义是否结合当前持仓说明？
-4. 风险提示是否至少一条？
-5. 正文中是否无真实交易指令？
-6. 是否无未来信息泄露（财报前报告未引用 as-of 之后的信息）？
-7. 格式是否包含固定六部分？
+1. 结论是否明确为三者之一？（critic-risk 负责）
+2. 理由是否至少三条并标注来源和 as-of？（critic-evidence 负责）
+3. 持仓含义是否结合当前持仓说明？（critic-evidence 负责）
+4. 风险提示是否至少一条？（critic-risk 负责）
+5. 正文中是否无真实交易指令？（critic-risk 负责）
+6. 是否无未来信息泄露（财报前报告未引用 as-of 之后的信息）？（critic-evidence / critic-risk 负责）
+7. 格式是否包含固定六部分？（critic 负责人覆盖检查时负责）

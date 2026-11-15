@@ -124,3 +124,22 @@ schema.md：定义这些数据长什么样：请求（request_id、触发原因�
 rules.md：限制和规则，数字直接定下来——最大修订轮数 3、单步重试 2 次且退避、单次运行工具调用不超过 60 次、单次运行不超过 20 分钟；终态分开记录原因：accepted、rejected、blocked、exhausted、stalled、user_stopped，其中 exhausted 绝不等于通过；恢复规则：先核对完成标记、ID 和哈希，只做还没做完的，已经完成的直接返回保存的结果；as-of 规则：财报前的报告不能引用之后的信息。
 
 只写这些规则和契约，先不要写 agent 的正文和脚本。
+
+## 第 9 条 · 补录
+接下来写 pypl/agents/ 下八个 agent 的正文。先读一下 references/ 里的 role-cards.md、schema.md、rules.md，按里面的契约来，不要自己另起一套。写之前先对齐三处：
+
+1. role-cards.md 里 gen-data 只有 Read，没法取数；critic-evidence 只有 Read，没法独立核对来源。工具以我下面写的为准，请同步改 role-cards.md 的「可用工具」。
+2. schema.md 的 Request.trigger 里有 evo，evo 不生成报告，把它去掉。
+3. schema.md 的 Critic 检查卡七项没写谁负责，请在每一项后面标出负责角色：结论、理由、来源核对、as-of 泄露归 critic-evidence 或 critic-risk（你按内容分），稳健性归 critic-robustness，交易指令和风险提示归 critic-risk，格式（第 7 项，对应 format 维度）归 critic 负责人在覆盖检查时核对。保证每一项都有人负责。
+
+然后写八个 agent。每个文件的正文用中文，包括：你是谁、输入什么、做什么、输出格式（严格按 schema.md，只返回 JSON 或固定结构的文本）、不能做什么、信息不够时怎么办（明确返回「信息不足」，不要编）。frontmatter 的 tools 按下面来：
+
+- generator 和 critic（两个负责人）：tools 是 Agent 和 Read；subagents 分别列各自的三个专项。正文里要写死：必须真的去调用三个专项，不能自己编专项的回答；产物和证据用文件路径加 sha256 传给专项和 Critic，不要复述内容；最后返回的内容里要列出你实际调用了哪几个专项，方便控制器核对；如果派活失败就直接返回错误，不要假装成功。
+- gen-data：Read、WebSearch、FetchURL、mcp__kimi-datasource__*。只能用 design/task.md 里允许的资料来源，每条数据都要带来源链接和获取时间，超过 as-of 的一律不用。
+- gen-fundamentals 和 gen-valuation：只给 Read，输入是 gen-data 整理好的数据文件，不要自己上网。
+- critic-evidence：Read、FetchURL，要自己去核对报告里的关键数字是不是和来源对得上。
+- critic-robustness 和 critic-risk：只给 Read。critic-risk 要检查：有没有买入、卖出、下单这类执行性指令；有没有引用 as-of 之后的信息；结论是不是增持、减持、持有不动三选一；有没有风险提示。
+
+所有 agent 都不给 Write、Edit、Bash。最后一条消息必须是完整、自成一体的结果，因为调用你的上级只能看到这一条。
+
+写完后列一张表：角色、tools、subagents，我对着 role-cards.md 核一下。脚本这一步还是不写。
