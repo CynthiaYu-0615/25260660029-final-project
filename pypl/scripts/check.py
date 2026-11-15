@@ -18,7 +18,7 @@ import tempfile
 import traceback
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-TEST_FILES = ["test_controller.py", "test_hook.py", "test_demo.py"]
+TEST_FILES = ["test_controller.py", "test_hook.py", "test_demo.py", "test_evo.py"]
 
 
 def _load_module(name, path):

@@ -284,3 +284,26 @@ evidence/README.md：每个子目录是什么证据、一条命令怎么复现�
 
 全部通过后把 demo.py --all 的输出和 check.py 的完整输出贴给我。agent 其他部分和 skill 这一步不要动。
 ~~~~
+
+## 第 17 条 · 2026-11-15 21:29:00
+~~~~
+接下来做作业要求的「对照固定基线测试改动、决定采纳或拒绝、记录版本并回滚」。完整的 LLM 研究流程跑两遍太慢也不稳定，所以把 evo 做成确定性、可复现的版本：评估对象是关卡规则，基线样例是一组固定的候选报告，用 gate_report 当裁判，指标可以直接算出来。
+
+1. 把 gate 现在写死的规则抽成配置文件 pypl/references/gate_rules.json：执行性指令违禁词列表、数值容差（现在 0.5%）、最少理由条数、版本号字段 version。gate.py 改成读这个文件，不改变现有测试的结果。
+2. 固定基线集放 evals/baseline/：十几份候选报告样例（用 examples/input 里的真实数字改写），每份带期望结果 expected（should_pass 或 should_block 及原因类别）。要覆盖：正常报告、含「买入」「下单」的、EPS 写错的、结论不是三选一的、as-of 泄露的、理由不足三条的，再加两份「加仓」「清仓」「抄底」这类现有违禁词没覆盖到的执行性表述（现有规则会漏放，这是候选改动要改进的点）。
+3. 新增 pypl/scripts/evo.py（标准库）：
+   - run --rules <文件>：对基线集跑 gate，输出每份的实际结果、总体指标（拦截召回率：该拦的拦住了几份；误拦率：该放行的被拦了几份）。
+   - compare --baseline <规则文件> --candidate <规则文件>：输出对比，并按固定阈值给出建议：候选的误拦率不能高于基线，召回率必须提高，满足才建议采纳，否则拒绝并写明原因。阈值写进 references/evo_policy.md 并在代码里强制。
+   - adopt / rollback：采纳时必须有人工批准记录（复用 record_approval 的思路，写 evals/approvals.json，含批准人、时间、候选规则文件的 sha256）；没有批准记录拒绝执行。rollback 把 gate_rules.json 恢复到指定版本（用 git tag 对应的内容）。
+4. 版本记录：根目录新建 CHANGELOG.md，每次采纳/拒绝/回滚都追加一条（版本号、日期、改了什么、指标、决定、批准人）。用 git tag 打版本：先给当前规则打 v0.1-baseline。
+5. 把现在这一轮实际演练出来：
+   - 以 v0.1-baseline 规则跑基线，保存 evals/results/baseline.json；
+   - 写候选规则 v0.2（在违禁词里加入加仓、清仓、抄底等），compare，保存 evals/ab-001.md（指标、阈值、结论、理由）；
+   - 因为召回率提高且误拦率没升，建议采纳；请你用 evo.py adopt 走一遍人工批准（批准人写于欣荷，我来确认），打 tag v0.2；
+   - 再做一个故意不合格的候选 v0.3（比如把容差放宽到 5%，导致 EPS 写错的样例被放过），compare 的结论必须是拒绝，保存 evals/ab-002.md，并在 CHANGELOG 里记录「拒绝」；
+   - 最后演示 rollback 到 v0.1-baseline，重跑基线，证明指标和第一次完全一致（对比 baseline.json 的哈希），保存 evals/rollback-demo.md，CHANGELOG 里记录回滚，然后再把规则恢复到 v0.2（采纳版）并说明当前版本。
+6. 更新 skills/evo/SKILL.md 和 commands/evo.md，改成上面这套确定性流程（调用 evo.py），把「提示词改动用完整 LLM 流程对比」如实写成未来工作和局限。
+7. 给 check.py 加测试：基线结果可复现；候选改动被正确采纳和拒绝；没有批准记录时 adopt 失败；rollback 后指标一致。
+
+做完把 check.py 的输出、evals/ab-001.md、evals/ab-002.md、CHANGELOG.md 的内容贴给我。别的文件不要动。
+~~~~

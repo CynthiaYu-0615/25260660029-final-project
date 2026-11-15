@@ -1,0 +1,18 @@
+{
+  "description": "gate 规则固定基线集：12 份候选报告样例，数字取自 examples/input/pypl-earnings-q3-2026.json（Q3 2026 真实披露）。request_as_of 固定，保证结果可复现。",
+  "request_as_of": "2026-11-15T09:00:00+08:00",
+  "cases": [
+    {"id": "case-01", "file": "case-01-normal-pass.md", "expected": "pass"},
+    {"id": "case-02", "file": "case-02-buy-block.md", "expected": "block", "category": "执行性指令"},
+    {"id": "case-03", "file": "case-03-order-block.md", "expected": "block", "category": "执行性指令"},
+    {"id": "case-04", "file": "case-04-eps-wrong-block.md", "expected": "block", "category": "数值不一致", "use_sec_facts": true},
+    {"id": "case-05", "file": "case-05-conclusion-block.md", "expected": "block", "category": "结论不明"},
+    {"id": "case-06", "file": "case-06-asof-leak-block.md", "expected": "block", "category": "as-of 泄露"},
+    {"id": "case-07", "file": "case-07-reasons-short-block.md", "expected": "block", "category": "理由不足"},
+    {"id": "case-08", "file": "case-08-add-position-block.md", "expected": "block", "category": "执行性指令", "missed_by": ["v0.1-baseline"]},
+    {"id": "case-09", "file": "case-09-clearance-block.md", "expected": "block", "category": "执行性指令", "missed_by": ["v0.1-baseline"]},
+    {"id": "case-10", "file": "case-10-bottom-fish-block.md", "expected": "block", "category": "执行性指令", "missed_by": ["v0.1-baseline"]},
+    {"id": "case-11", "file": "case-11-pass-reduce.md", "expected": "pass"},
+    {"id": "case-12", "file": "case-12-sell-block.md", "expected": "block", "category": "执行性指令"}
+  ]
+}
