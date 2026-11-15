@@ -1,0 +1,50 @@
+{
+  "copied": [
+    {
+      "file": "state.json",
+      "sha256": "8b156f45603e85993a1b55186a9b094b77f6b768673b8211566047d37bbfac0f"
+    },
+    {
+      "file": "holdings.json",
+      "sha256": "a80b1d96310a7a941fbe8b1e450b67d2b8b5f2a7b9ea27d185198f6390355078"
+    },
+    {
+      "file": "approvals.json",
+      "sha256": "e2ddb82e922a42442c1c8204f3abf66e8fbce502df5083d45d9e3c79f6496ac8"
+    },
+    {
+      "file": "reports/report-req-20261115-003b98f0-r0.md",
+      "sha256": "7b9ad2fdb3fc499e4b3934fe60089ffb58ececce815bd406bf213b856e7f6a3b"
+    },
+    {
+      "file": "reports/report-req-20261115-003b98f0-r1.md",
+      "sha256": "f5b66251aa690454fc3285a8819d8844b8f042df9e4a04ad8f6d77d1d448e18f"
+    },
+    {
+      "file": "reports/report-req-20261115-003b98f0-r2.md",
+      "sha256": "227b3e68391ff253ef5cc4c9f8632a9ef97245e3aea0a3551bbe3f415645638e"
+    },
+    {
+      "file": "evidence/evidence-req-20261115-003b98f0-r0.json",
+      "sha256": "1212e71fb1eed20da1efb9404df9877c05cec93fba5493c80ce30ed241a3b4e9"
+    },
+    {
+      "file": "evidence/evidence-req-20261115-003b98f0-r1.json",
+      "sha256": "2151d7771b8ec39eaa04eccfa1262121bb277a90d27cba16fb5f691dbb7effb4"
+    },
+    {
+      "file": "evidence/evidence-req-20261115-003b98f0-r2.json",
+      "sha256": "add20295a6fd823445ed3e084fb939d48a640ac16ab5282c3f49c148ffbc7401"
+    },
+    {
+      "file": "evidence/sec_facts-req-20261115-003b98f0-r0.json",
+      "sha256": "28f3662836123845a9c314c6d09cf0fcbbe9c88bcea23e29f7ca572f22df3066"
+    }
+  ],
+  "missing": [
+    "events.json",
+    "issues.json",
+    "guard-log.jsonl"
+  ],
+  "credential_scan": "未发现凭据/token 特征"
+}

@@ -66,7 +66,7 @@ https://github.com/CynthiaYu-0615/25260660029-final-project
     ├── recovery/              # 中断恢复（跳过已完成步骤、persist 计数不变）
     ├── limits/                # 限制触发（blocked / stalled）
     ├── guard/                 # hook 拦截证据（guard-log.jsonl）
-    └── live/                  # 真实 LLM 端到端证据（尚未包含，预留）
+    └── live/                  # 真实 LLM 端到端证据（2026-11-15 /pypl:trade 运行，终态 accepted）
 ```
 
 ## 5. 环境配置与运行说明
@@ -172,7 +172,7 @@ python3 pypl/scripts/demo.py --all --offline   # 约 10 秒，复现六类证据
 
 与 [design/design.md](design/design.md) 第 6 节一致：
 
-- `evidence/live/` 尚未包含真实 LLM 端到端运行证据（目前 evidence/ 均为演示脚本用假 agent 驱动真实控制器与 hook 生成）；两者在 `evidence/README.md` 中严格区分。
+- `evidence/live/` 已包含 2026-11-15 一次真实 LLM 端到端运行（`/pypl:trade` 触发，request `req-20261115-003b98f0`，终态 accepted），其中如实记录了超时人工放宽、数据源局限、调用失误等问题；更早的 evidence/ 各目录仍为演示脚本用假 agent 驱动真实控制器与 hook 生成；两者在 `evidence/README.md` 中严格区分。
 - evo 目前只评估关卡规则（`gate_rules.json`）；提示词改动的「完整 LLM 流程前后对比」是未来工作。
 - Cron 只在会话打开时触发；循环任务 7 天过期需重新登记。
 - PreToolUse hook 是 fail-open 设计，只是第二道防线，不能作为唯一安全屏障。

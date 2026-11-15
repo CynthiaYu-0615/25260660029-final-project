@@ -1,0 +1,41 @@
+## 证据与 as-of 清单（req-20261115-003b98f0，信息截止 2026-11-15T22:30:00+08:00；round 1 修订版）
+
+### A. 财报核心数字（任务包 sec_facts，控制器 fetch_sec 确定性取数，recorded=false；gen-data 未重复取数）
+- revenues = 8,584,000,000 USD（即 8,584 million USD），期间 2026-07-01 至 2026-09-30，10-Q，filed 2026-10-27，accession 0001633917-26-000088；来源 https://data.sec.gov/api/xbrl/companyconcept/CIK0001633917/us-gaap/Revenues.json；获取时间 2026-11-15T22:30:32+08:00。
+- net_income = 1,073,000,000 USD（即 1,073 million USD），同上期间与 accession；来源 https://data.sec.gov/api/xbrl/companyconcept/CIK0001633917/us-gaap/NetIncomeLoss.json；获取时间同上。
+- diluted_eps = 1.25 USD/shares，同上；来源 https://data.sec.gov/api/xbrl/companyconcept/CIK0001633917/us-gaap/EarningsPerShareDiluted.json；获取时间同上。
+- 报告 key_figures 块数值与上述完全一致（8584 / 1073 / 1.25，period 2026-07-01 至 2026-09-30），未改写、未四舍五入改变精度（round 1 未改动）。
+- 【round 1 修订 issue-ev-001】收入同比口径拆分：XBRL 名义同比 = (8,584 - 8,417) / 8,417 ≈ +2.0%（Critic 提供的上年同期 8,417M 口径）；媒体口径约 +2.4% 抄录自智通财经 2026-10-27 报道（https://www.zhitongcaijing.com/content/detail/1513500.html，dongcai 检索获取 2026-11-15T22:33:00+08:00），大概率为汇率中性口径。报告理由 1、风险提示 1 已将两种口径分开标注，不再混排。
+
+### B. 行情与共识（gen-data，yahoo_finance / stockanalysis.com）
+- 2026-11-13 收盘 59.28 USD（+0.98，+1.68%），previous close 58.30，盘后 59.16（-0.20%），成交量 9,505,861；来源 yahoo_finance get_stock_info，https://finance.yahoo.com/quote/PYPL，获取 2026-11-15T22:34:00+08:00（数据日期 2026-11-13 ≤ as_of；2026-11-15 为周日市场未开盘）。
+- 30 天区间：2026-10-14 收 56.10 → 2026-11-13 收 59.28，+3.18（+5.67%）；来源 stockanalysis.com（FetchURL）+ yahoo_finance，获取 2026-11-15T22:35:00+08:00。
+- 其他指标：trailing P/E 11.31、forward P/E 10.04、市值 492.4 亿美元、52 周区间 38.46-63.93、50 日均 55.61、200 日均 50.14、beta 1.316、股息 0.56 USD/年（yield 0.94%）；来源与获取时间同 B-1。
+- 分析师共识：Hold（recommendation_mean 2.98，33 位），目标均价 57.31 / 中位 58.00 / 高 80 / 低 36 USD；来源与获取时间同 B-1。
+- 【round 1 修订 issue-ro-001】隐含 EPS 与敏感性：现价 59.28 / trailing P/E 11.31 → 隐含 TTM GAAP EPS ≈ 5.24 USD；59.28 / forward P/E 10.04 → 隐含 forward GAAP EPS ≈ 5.90 USD；±1x forward 倍数 ≈ ±5.90 USD（概率加权约 ±3 USD，按 50% 基准权重折算）；倍数压缩 2-3 turns 至 7-9x 时，5.90 × 7 至 5.90 × 9 ≈ 41-53 USD，按三情景概率加权后约 51-54 USD，较现价 59.28 约 -10% 至 -15%，与 gen-valuation 悲观情景（36-42 USD）及分析师低目标 36 USD 方向一致。以上计算引自 gen-valuation 输出，无新增取数。
+
+### C. 新闻（gen-data，dongcai_mx_finance_search，获取 2026-11-15T22:33:00+08:00；检索页 https://so.eastmoney.com/news/s?keyword=PayPal%20最新消息）
+- 2026-11-11 财联社：伯恩斯坦目标价 55→60 USD（无原文 URL，评级调整属非重大事件）。
+- 2026-11-06 21 世纪经济报道：贝宝支付副总经理专访（中国业务双位数增长、5,910 万消费者购买中国跨境电商商品）。
+- 2026-10-28 财联社×3：花旗 61→58、摩根士丹利 45→46、瑞穗 51→55 USD。
+- 2026-10-27 智通财经：Q3 报道（营收媒体口径同比约 +2.4%、Non-GAAP EPS 1.45 超预期、交易与信贷损失 3.86 亿美元同比收窄、未来 2-3 年 ≥15 亿美元毛运行率成本节省、上调全年利润指引）；原文 https://www.zhitongcaijing.com/content/detail/1513500.html。
+- 2026-10-26《商学院》杂志：行业观察稿，http://www.bmronline.com.cn/index.php?m=content&c=index&a=show&catid=24&id=15386。
+- 以上发布日期均 ≤ as_of；已排除低可信来源（西格跨境）与窗口外条目；Non-GAAP EPS 1.45 与 sec_facts GAAP 1.25 口径不同，报告以 sec_facts 为准。
+
+### D. 8-K 与行动前核验（引用 pypl/references/data-sources.md 2026-11-15 实测记录；本次因数据源额度达 20 次上限未重复调用 sec_edgar）
+- 最近一份：filing_date 2026-10-27，accession 0001633917-26-000086，Item 2.02 + Item 9.01（Q3 2026 业绩）；https://www.sec.gov/Archives/edgar/data/1633917/000163391726000086/。
+- 【round 1 修订 issue-ro-003】已升级为报告风险提示第 4 条「行动前强制检查项」：任何持仓评估或调整意向出现前，必须先核验 2026-10-27 之后的 EDGAR filings（guidance 修正、高管变动、并购、监管事件类披露）；本次未完成该核验，结论标注为有条件结论。
+
+### E. 基本面与估值结论（gen-fundamentals ok / gen-valuation ok，2026-11-15 基于 A-D 计算）
+- 净利率 ≈ 12.5%（1,073 / 8,584）。
+- 三情景：悲观 36-42 USD（中值 39，25%，7-8x forward）、基准 57-64 USD（中值 60.5，50%，10-11x forward）、乐观 70-80 USD（中值 75，25%，11-12x forward）；概率加权公允价值中枢 ≈ 58.8 USD，与现价 59.28 基本相当；与分析师目标区间（36/57.31/58/80）交叉一致。
+- 【round 1 修订 issue-ro-002】尾部不对称：悲观中值 39 USD 对现价约 -34%（(39-59.28)/59.28 ≈ -34.2%）；乐观中值 75 USD 约 +27%（(75-59.28)/59.28 ≈ +26.5%），下行大于上行，风险收益比略偏负；减持触发条件（研究表述）：跌破登记成本 58.5 USD 且运营指标恶化，或板块倍数压缩 2-3 turns 至 7-9x（对应加权公允价值约 51-54 USD），引自 B 项敏感性计算与持仓登记信息（2026-11-10 登记新增持仓 100 股 @ 58.5 USD，recorded_at 2026-11-15T14:30:12+00:00）。
+- 下一次财报日期：无官方值，按历史节奏推断约 2027-02 初（推断值，非实测，报告中已标注）。
+- 结论「持有不动」与估值中枢 ≈ 现价、共识 Hold 一致，全文一致；round 1 未改变结论。
+
+### F. as-of 合规声明
+- 全部引用数据的内容时间戳 ≤ 2026-11-15T22:30:00+08:00；取数动作完成时间（约 22:33-22:36）因基础设施延迟略晚于 as_of，但无一条数据内容晚于 as_of，已按规则过滤。
+- 报告封面已写明「信息截止至 2026-11-15T22:30:00+08:00」。
+- 财报核心数字仅来自 sec_facts，未由 agent 改写；key_figures 块 round 1 原样保留。
+- 持仓处理：仅引用 holdings 文本做「持仓含义」分析，未修改任何状态文件，未给出交易指令；减持相关内容均为研究结论层面的条件描述。
+- 修订对照：issue-ev-001 → A 项与理由 1/风险提示 1；issue-ro-001 → B 项敏感性与理由 2；issue-ro-002 → B/E 项尾部不对称与风险提示 5；issue-ro-003 → D 项与风险提示 4。

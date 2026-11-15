@@ -1,0 +1,95 @@
+{
+  "requests": {
+    "req-20261115-003b98f0": {
+      "request_id": "req-20261115-003b98f0",
+      "trigger": "trade",
+      "as_of": "2026-11-15T22:30:00+08:00",
+      "phase": "final",
+      "round": 3,
+      "max_rounds": 3,
+      "artifacts": {
+        "sec_facts": {
+          "path": ".pypl/evidence/sec_facts-req-20261115-003b98f0-r0.json",
+          "sha256": "28f3662836123845a9c314c6d09cf0fcbbe9c88bcea23e29f7ca572f22df3066"
+        },
+        "candidate_report": {
+          "path": ".pypl/reports/report-req-20261115-003b98f0-r2.md",
+          "sha256": "227b3e68391ff253ef5cc4c9f8632a9ef97245e3aea0a3551bbe3f415645638e"
+        },
+        "evidence_bundle": {
+          "path": ".pypl/evidence/evidence-req-20261115-003b98f0-r2.json",
+          "sha256": "add20295a6fd823445ed3e084fb939d48a640ac16ab5282c3f49c148ffbc7401"
+        }
+      },
+      "issues": [
+        {
+          "issue_id": "issue-ev-001",
+          "severity": "minor",
+          "dimension": "evidence",
+          "location": "报告第三节理由 1「GAAP 收入 85.84 亿美元（同比约 +2.4%…）」",
+          "description": "同比 +2.4% 抄录自智通财经报道，按 SEC XBRL 本期 8,584M 与上年同期 8,417M 计算名义同比约 +2.0%，媒体口径大概率为汇率中性或其他口径，报告未注明口径差异。",
+          "fix_requirement": "引用媒体增速时标注口径（据智通财经报道），或改用 XBRL 名义同比约 +2.0%，避免 GAAP 数字与非 GAAP/汇率中性增速混排。",
+          "created_by": "critic-evidence",
+          "status": "open"
+        },
+        {
+          "issue_id": "issue-ro-001",
+          "severity": "minor",
+          "dimension": "robustness",
+          "location": "报告第三节理由 2 与证据 E（三情景估值 57-64/58.8 美元）",
+          "description": "结论锚定基准情景 10-11x forward 倍数假设，未给出估值对倍数变化的敏感性；若板块估值中枢下移 2-3 个 turns，加权公允价值降至约 51-54 美元，结论可能由持有转向减持，报告未量化翻转阈值。",
+          "fix_requirement": "补充一行倍数敏感性说明（加权公允价值对 ±1x forward 倍数的弹性约 ±3 美元），或明确结论由持有翻转为减持的倍数/盈利组合阈值。",
+          "created_by": "critic-robustness",
+          "status": "open"
+        },
+        {
+          "issue_id": "issue-ro-002",
+          "severity": "minor",
+          "dimension": "robustness",
+          "location": "报告第三节理由 2、第五节风险提示 1",
+          "description": "三情景尾部收益不对称：悲观 25%（中值约 39 美元）对应约 -34% 下行，乐观 25%（中值约 75 美元）对应约 +27% 上行，风险收益比略偏负；报告未讨论该不对称性。",
+          "fix_requirement": "在持仓含义或风险提示中补充尾部不对称性说明，或给出明确的减持触发条件，使结论在不同风险偏好的读者下同样稳健。",
+          "created_by": "critic-robustness",
+          "status": "open"
+        },
+        {
+          "issue_id": "issue-ro-003",
+          "severity": "minor",
+          "dimension": "robustness",
+          "location": "报告第五节风险提示 4 与证据 D（8-K 核验缺口）",
+          "description": "因数据源额度上限未能核验 2026-10-27 之后约 19 天窗口内是否有新 8-K；若存在重大披露，估值关键输入可能过时；报告已声明但未设置行动前硬性检查点。",
+          "fix_requirement": "将风险提示第 4 条升级为明确的行动前检查项：下次持仓评估或任何调整意向出现前，先完成 2026-10-27 之后 EDGAR filings 的核验。",
+          "created_by": "critic-robustness",
+          "status": "open"
+        },
+        {
+          "issue_id": "issue-ev-002",
+          "severity": "minor",
+          "dimension": "evidence",
+          "location": "报告理由 1 / 风险提示 1 及证据 A 第 5 条",
+          "description": "新增上年同期 8,417M 数字仅标注「Critic 提供」，未绑定完整 XBRL 条目（期间/accession/frame）与获取时间戳，来源链不闭合。",
+          "fix_requirement": "在证据 A 中将 8,417M 补记完整来源：SEC XBRL Revenues.json，条目 start=2025-07-01 / end=2025-09-30 / val=8,417,000,000 / frame CY2025Q3，注明获取途径与时间（round 0 复核 FetchURL，2026-11-15），与「Critic 提供」转述标注并列。",
+          "created_by": "critic-evidence",
+          "status": "open"
+        },
+        {
+          "issue_id": "issue-ev-003",
+          "severity": "minor",
+          "dimension": "evidence",
+          "location": "报告理由 2 与风险提示 5",
+          "description": "「约 51-54 美元（较现价约 -10% 至 -15%）」端点取整松动：54 美元端实际约 -8.9%，略超出所述下限。",
+          "fix_requirement": "将表述修正为「较现价约 -9% 至 -14%」或区间改为「约 51-53 美元（较现价约 -11% 至 -14%）」，使端点与百分比严格对应。",
+          "created_by": "critic-evidence",
+          "status": "open"
+        }
+      ],
+      "consecutive_passes": 2,
+      "version": "v0.1.0",
+      "final_state": "accepted",
+      "final_reason": "用户 于欣荷 批准归档",
+      "created_at": "2026-11-15T14:30:24+00:00",
+      "updated_at": "2026-11-15T15:08:54+00:00"
+    }
+  },
+  "updated_at": "2026-11-15T15:08:54+00:00"
+}

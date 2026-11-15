@@ -95,7 +95,7 @@ Orchestrator 对应主控 agent（课上架构的调度核心，本会话内由 
 ## 6. 证据状态与局限
 
 - **演示证据**（假 agent 返回值驱动真实控制器与真实 hook，不依赖 LLM）：`evidence/` 下 `verification/blocked-then-pass`、`verification/exhausted`、`approval`、`recovery`、`limits`、`guard` 六个子目录，由 `pypl/scripts/demo.py` 生成，可 `python3 pypl/scripts/demo.py --all` 复现。索引与复现命令见 `evidence/README.md`。
-- **真实 LLM 端到端运行证据**：`evidence/live/` **尚未包含**（预留目录），后续用真实会话跑通完整流水线后补入，并与演示证据严格区分。
+- **真实 LLM 端到端运行证据**：`evidence/live/` 已包含 2026-11-15 由 `/pypl:trade` 触发的真实运行（request `req-20261115-003b98f0`）：`run-summary.md`、`agent-stats.json`、`.pypl/` 快照与可复现脚本。该运行终态 `accepted`（Critic 4 轮、修订 2 轮、用户批准归档），但**超时 20 分钟限制是用户人工放宽的**（严格应为 `stalled`）；且存在数据源局限（yahoo 历史行情/新闻接口未成功、2026-10-27 之后 EDGAR 披露未核验）、`record_review` 首次传参失误、issue 状态在 state.json 中不更新等如实记录的问题，详见 `evidence/live/run-summary.md`「遇到的问题与局限」。与演示证据严格区分。
 - **evo 目前只评估关卡规则**（`gate_rules.json`）：提示词改动的「完整 LLM 流程前后对比」是未来工作，受制于 LLM 速度与稳定性未实现（`pypl/skills/evo/SKILL.md`「未来工作与局限」）。
 - **Cron 局限**：只在会话打开时触发；循环任务 7 天过期。
 - **hook 局限**：Kimi 的 hook 是 fail-open（脚本崩溃/超时默认放行），只能作第二道防线，不是唯一安全屏障（见第 7 节）。

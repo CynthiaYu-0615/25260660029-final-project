@@ -1,0 +1,13 @@
+{
+  "approvals": [
+    {
+      "request_id": "req-20261115-003b98f0",
+      "decision": "approve",
+      "approver": "于欣荷",
+      "sha256": "227b3e68391ff253ef5cc4c9f8632a9ef97245e3aea0a3551bbe3f415645638e",
+      "result": "approved",
+      "approval_id": "apv-001",
+      "recorded_at": "2026-11-15T15:08:54+00:00"
+    }
+  ]
+}

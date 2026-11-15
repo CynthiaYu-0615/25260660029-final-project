@@ -349,3 +349,27 @@ evidence/README.md：每个子目录是什么证据、一条命令怎么复现�
 ~~~~
 批准
 ~~~~
+
+## 第 22 条 · 2026-11-15 23:15:00
+~~~~
+刚才我们真实跑了一次端到端流水线（不管成功还是中断），现在把这次真实运行的证据整理进 evidence/live/，要如实，不要美化，失败和问题也要写。
+
+1. 用一个 Python 脚本（不要用 Bash 的 cp，hook 会拦涉及 .pypl/ 的 cp）把运行目录下 .pypl/ 里的 state.json、holdings.json、events.json、issues.json、approvals.json、reports/、evidence/、guard-log.jsonl（有的话）复制到 evidence/live/pypl-snapshot/；复制前检查内容里没有凭据或 token，持仓如果是假数据要在 summary 里标明「演示用假持仓」。
+2. 去 ~/.kimi-code/sessions/ 里这个仓库对应的会话目录，读本次会话的 agents/*/wire.jsonl，统计：起了多少个子 agent、分别是哪些（generator、critic 以及六个专项里实际出现了哪几个）、有没有出现 Agent 调用失败、gen-data 实际调用了哪些 Datasource 数据源或工具。不要把原始 wire 日志复制进仓库（里面有对话内容），只写统计结果。
+3. 写 evidence/live/run-summary.md：触发方式和命令、request_id、as_of、fetch_sec 取到的数字、候选报告的结论（增持/减持/持有不动）和 sha256、gate_report 结果、Critic 每一轮的问题项和是否通过、总轮数、终态、我是否批准归档、Cron 是否注册成功、guard-log 里有没有拦截记录、总耗时；然后单列「遇到的问题与局限」，真实发生了什么就写什么（比如某个专项没被调用、数据取不到、被审批卡住、被我中断）。
+4. 更新 evidence/README.md 里 live/ 一行，更新 README.md 和 design/design.md 里所有「尚未包含 / 预留」的 evidence/live/ 说法，改成与实际一致的描述，包括这次的结论和局限。
+5. 如果这次运行暴露了插件本身的 bug（比如命令写法错、脚本路径错），先如实记录进 run-summary，再告诉我，不要擅自大改。
+
+做完告诉我：终态是什么、起了几个子 agent、有哪些问题。
+再补充几件这次运行里实际发生的事，请在 run-summary.md 的「遇到的问题与局限」里如实写进去，并和你读到的会话记录与 .pypl/ 里的状态互相核对，核对不上的地方也写出来：
+1. 总耗时超过了我们自己定的 20 分钟限制，是我让你继续跑完的。按规则严格讲应该是 stalled，这次是人为放宽、人工覆盖了这条限制，最后以 accepted 归档。把实际耗时和起止时间写清楚，不要写成没有超限。
+2. Datasource 的额度用完了，所以报告里写了「2026-10-27 之后的 EDGAR 披露未核验」。写明这是数据源局限，以及哪些数据没取到。
+3. 第 2 轮通过后，你第一次给 record_review 传了已修复的问题项，控制器因此返回了 revise，后来纠正为只传未解决问题项。写明这件事，并说明这是调用方式的失误，不是控制器的错误；同时指出 skills/start/SKILL.md 里是否需要把「只传未解决问题项」写得更明确（先记录，不要改）。
+4. 持仓是演示用假持仓（买入 100 股，58.5 美元，2026-11-10），不是真实持仓。
+5. 把 Critic 每一轮的问题项原文摘要、哪一轮修复了什么列成表。
+~~~~
+
+## 第 23 条 · 2026-11-15 23:20:00
+~~~~
+快点，不要修复了，时间来不及了，赶紧整理evidence
+~~~~

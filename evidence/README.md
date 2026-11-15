@@ -27,7 +27,7 @@ python3 pypl/scripts/demo.py --all --offline
 | `recovery/` | D 中断恢复 | 子进程在 persist_artifact 完成后、record_review 之前被 kill；重启后 `recover` 返回已完成步骤（跳过已完成），恢复前后 `persist_artifact` 调用计数不变，续跑到达 await_approval |
 | `limits/` | E 限制触发 | `check_limits`：工具调用超 60 次返回 `blocked`；注入的开始时间超 20 分钟返回 `stalled`；正常范围返回 `ok` |
 | `guard/` | F hook 拦截 | 真实 PreToolUse 钩子对 4 条典型输入（Write `.pypl/state.json`、`..` 绕路写、Bash 重定向写 `.pypl/`、访问 alpaca 下单接口）退出码 2 并记录 `guard-log.jsonl`，另附 data.sec.gov 和 git status 两条放行对照；`hook-results.jsonl` 列出每条退出码和拦截原因 |
-| `live/` | 真实 LLM 运行 | 端到端真实运行的证据（待补）：与上面演示证据严格区分 |
+| `live/` | 真实 LLM 运行 | 2026-11-15 由 `/pypl:trade` 触发的真实端到端运行（request `req-20261115-003b98f0`）：`run-summary.md`（触发、取数、Critic 各轮问题项与修复对照、终态 accepted、38.5 分钟、超时人工放宽等如实记录）、`agent-stats.json`（9 个子 agent、Datasource 调用成败、Agent 调用失败）、`pypl-snapshot/`（`.pypl/` 快照 + manifest sha256）、`collect_snapshot.py` / `analyze_session.py`（可复现脚本）。与上面演示证据严格区分 |
 
 ## 回归保障
 
